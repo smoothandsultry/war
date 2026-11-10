@@ -6,6 +6,39 @@ let playerName = "";
 let playerColor = DEFAULT_TANK_COLOR;
 let currentGameState = { tanks: [] };
 
+function getValidMoveCells(currentTank) {
+    if (!currentTank) return [];
+    const cells = [];
+    for (let y = 0; y < GRID_SIZE; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+            const distance = Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y));
+            if (distance === 1) {
+                cells.push({ x, y });
+            }
+        }
+    }
+    return cells;
+}
+
+function getDistanceFromTank(currentTank, x, y) {
+    return Math.sqrt((currentTank.x - x) ** 2 + (currentTank.y - y) ** 2);
+}
+
+function getValidTargetCells(currentTank, actionType) {
+    if (!currentTank) return [];
+    const range = actionType === "SHOOT" ? (currentTank.range || 1) : (currentTank.range || 2);
+    const cells = [];
+    for (let y = 0; y < GRID_SIZE; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+            const distance = getDistanceFromTank(currentTank, x, y);
+            if (distance <= range) {
+                cells.push({ x, y });
+            }
+        }
+    }
+    return cells;
+}
+
 function getReadableTextColor(hexColor) {
     const normalized = (hexColor || DEFAULT_TANK_COLOR).replace("#", "").trim();
     const safeHex = normalized.length === 3
@@ -71,12 +104,25 @@ function buildGrid() {
     const board = document.getElementById("grid-board");
     board.innerHTML = "";
 
+    const currentTank = getCurrentTank();
+    const validCells = selectedAction === "MOVE"
+        ? getValidMoveCells(currentTank)
+        : selectedAction && ["SHOOT", "HEAL"].includes(selectedAction)
+            ? getValidTargetCells(currentTank, selectedAction)
+            : [];
+    const validCellSet = new Set(validCells.map(cell => `${cell.x},${cell.y}`));
+
     for (let y = 0; y < GRID_SIZE; y++) {
         for (let x = 0; x < GRID_SIZE; x++) {
             const cell = document.createElement("div");
             cell.classList.add("cell");
             cell.dataset.x = x;
             cell.dataset.y = y;
+
+            const isValidTarget = validCellSet.has(`${x},${y}`);
+            if (isValidTarget) {
+                cell.classList.add("valid-target");
+            }
 
             const occupant = currentGameState.tanks.find(t => t.x === x && t.y === y);
             if (occupant) {
@@ -107,7 +153,18 @@ function selectAction(actionType) {
         return;
     }
 
+    if (actionType === "UPGRADE") {
+        socket.emit("player-action", {
+            name: playerName,
+            action: actionType,
+            target: { x: currentTank.x, y: currentTank.y }
+        });
+        document.getElementById("action-instruction").textContent = "Upgrade used.";
+        return;
+    }
+
     selectedAction = actionType;
+    buildGrid();
     document.getElementById("action-instruction").textContent = `Selected: ${selectedAction}. Click a grid cell.`;
 }
 
@@ -119,14 +176,25 @@ function handleCellClick(x, y) {
         return;
     }
 
-    const distance = Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y));
+    if (selectedAction === "UPGRADE") {
+        selectedAction = null;
+        document.getElementById("action-instruction").textContent = "Select an action, then click a tile.";
+        return;
+    }
 
-    if (selectedAction === "MOVE" && distance !== 1) {
+    const distance = Math.sqrt((currentTank.x - x) ** 2 + (currentTank.y - y) ** 2);
+
+    if (selectedAction === "MOVE" && Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y)) !== 1) {
         alert("Move only works 1 space away.");
         return;
     }
 
-    if (["SHOOT", "HEAL"].includes(selectedAction) && distance > (currentTank.range || 2)) {
+    if (selectedAction === "SHOOT" && distance > (currentTank.range || 1)) {
+        alert("That target is out of range.");
+        return;
+    }
+
+    if (selectedAction === "HEAL" && Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y)) > (currentTank.range || 2)) {
         alert("That target is out of range.");
         return;
     }
@@ -134,5 +202,6 @@ function handleCellClick(x, y) {
     socket.emit("player-action", { name: playerName, action: selectedAction, target: { x, y } });
 
     selectedAction = null;
+    buildGrid();
     document.getElementById("action-instruction").textContent = "Select an action, then click a tile.";
 }

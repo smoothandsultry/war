@@ -105,3 +105,12 @@ body {
     color: #fff;
     font-weight: bold;
 }
+
+.cell.valid-target {
+    box-shadow: inset 0 0 0 3px #7c9da3;
+    background-color: #999999;
+}
+
+.cell.valid-target.has-tank {
+    box-shadow: inset 0 0 0 3px #d3af38, 0 0 8px rgba(56, 211, 159, 0.7);
+}

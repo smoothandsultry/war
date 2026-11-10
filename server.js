@@ -24,6 +24,10 @@ function getDistance(a, b) {
     return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 }
 
+function getCircularDistance(a, b) {
+    return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+}
+
 function getActionCost(action) {
     switch (action) {
         case "MOVE":
@@ -53,8 +57,8 @@ io.on("connection", (socket) => {
             x: randomX,
             y: randomY,
             hearts: 3,
-            ap: 3,
-            range: 2
+            ap: 10,
+            range: 1
         };
 
         gameState.tanks.push(newTank);
@@ -134,7 +138,7 @@ io.on("connection", (socket) => {
                 return;
             }
 
-            const distance = getDistance(tank, target);
+            const distance = getCircularDistance(tank, target);
             if (distance > (tank.range || 2)) {
                 console.log(`Shoot target out of range: ${distance} spaces away`);
                 return;
