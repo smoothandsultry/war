@@ -9,7 +9,7 @@
     <div id="login-screen">
         <h1>war</h1>
         <input type="text" id="username-input" placeholder="Commander Name" maxlength="15">
-        <label for="color-input" class="color-picker-label">Tank Color</label>
+        <label for="color-input" class="color-picker-label">Your Color</label>
         <input type="color" id="color-input" value="#0e37a8" title="Choose your tank color">
         <button onclick="joinGame()">Enter Battle</button>
     </div>
@@ -17,22 +17,28 @@
     <div id="game-container" style="display: none;">
         <h2>Logged in as: <span id="user-name">Guest</span></h2>
 
-        <h3>Board</h3>
-        <div id="grid-board" class="grid-20"></div>
+        <div class="board-shell">
+            <div id="board-top-labels" class="board-top-labels"></div>
+
+            <div class="board-inner">
+                <div id="board-side-labels" class="board-side-labels"></div>
+                <div id="grid-board" class="grid-20"></div>
+            </div>
+        </div>
 
         <div class="status-panel">
             <h3>My Status</h3>
             <p>Hearts: <span id="stat-hearts">3</span>/3</p>
-            <p>Hidden AP: <span id="stat-ap">0</span></p>
+            <p>Action Points: <span id="stat-ap">0</span></p>
             <p>Range: <span id="stat-range">2</span></p>
         </div>
 
         <div class="action-panel">
             <h3>Actions</h3>
-            <button onclick="selectAction('MOVE')">Move (1 AP)</button>
-            <button onclick="selectAction('SHOOT')">Shoot (1 AP, range 2)</button>
-            <button onclick="selectAction('UPGRADE')">Upgrade Range (3 AP)</button>
-            <button onclick="selectAction('HEAL')">Give AP (1 AP, range 2)</button>
+            <button onclick="selectAction('MOVE')">[1] Move</button>
+            <button onclick="selectAction('SHOOT')">[1] Shoot</button>
+            <button onclick="selectAction('GIFT')">[1] Gift</button>
+            <button onclick="selectAction('UPGRADE')">[3] Upgrade</button>
             <p id="action-instruction">Select an action, then click a tile.</p>
         </div>
     </div>

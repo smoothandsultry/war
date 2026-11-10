@@ -33,6 +33,7 @@ function getActionCost(action) {
         case "MOVE":
         case "SHOOT":
         case "HEAL":
+        case "GIFT":
             return 1;
         case "UPGRADE":
             return 3;
@@ -58,7 +59,7 @@ io.on("connection", (socket) => {
             y: randomY,
             hearts: 3,
             ap: 10,
-            range: 1
+            range: 2
         };
 
         gameState.tanks.push(newTank);
@@ -101,7 +102,7 @@ io.on("connection", (socket) => {
             return;
         }
 
-        if (data.action === "HEAL") {
+        if (["HEAL", "GIFT"].includes(data.action)) {
             const target = gameState.tanks.find(t =>
                 t.name !== tank.name &&
                 t.x === data.target.x &&
@@ -109,19 +110,19 @@ io.on("connection", (socket) => {
             );
 
             if (!target) {
-                console.log(`Invalid heal target: ${data.name} attempted to give AP to ${data.target.x},${data.target.y}`);
+                console.log(`Invalid ${data.action.toLowerCase()} target: ${data.name} attempted to use ${data.action} on ${data.target.x},${data.target.y}`);
                 return;
             }
 
             const distance = getDistance(tank, target);
             if (distance > (tank.range || 2)) {
-                console.log(`Heal target out of range: ${distance} spaces away`);
+                console.log(`${data.action} target out of range: ${distance} spaces away`);
                 return;
             }
 
             tank.ap -= actionCost;
             target.ap += 1;
-            console.log(`Commander ${tank.name} gave 1 AP to ${target.name} (${distance} spaces away)`);
+            console.log(`Commander ${tank.name} used ${data.action} on ${target.name} (${distance} spaces away)`);
             io.emit("update-board", gameState);
             return;
         }

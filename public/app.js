@@ -57,6 +57,27 @@ function getReadableTextColor(hexColor) {
     return luminance > 0.65 ? "#111111" : "#ffffff";
 }
 
+function renderBoardRuler() {
+    const topLabels = document.getElementById("board-top-labels");
+    const sideLabels = document.getElementById("board-side-labels");
+    if (!topLabels || !sideLabels) return;
+
+    topLabels.innerHTML = "";
+    sideLabels.innerHTML = "";
+
+    for (let i = 0; i < GRID_SIZE; i++) {
+        const label = document.createElement("span");
+        label.textContent = String.fromCharCode(65 + i);
+        topLabels.appendChild(label);
+    }
+
+    for (let i = 1; i <= GRID_SIZE; i++) {
+        const label = document.createElement("span");
+        label.textContent = String(i);
+        sideLabels.appendChild(label);
+    }
+}
+
 function joinGame() {
     const input = document.getElementById("username-input");
     const colorInput = document.getElementById("color-input");
@@ -69,6 +90,7 @@ function joinGame() {
 
     document.getElementById("login-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
+    renderBoardRuler();
 
     socket.emit("player-join", { name: playerName, color: playerColor });
 }
@@ -107,7 +129,7 @@ function buildGrid() {
     const currentTank = getCurrentTank();
     const validCells = selectedAction === "MOVE"
         ? getValidMoveCells(currentTank)
-        : selectedAction && ["SHOOT", "HEAL"].includes(selectedAction)
+        : selectedAction && ["SHOOT", "HEAL", "GIFT"].includes(selectedAction)
             ? getValidTargetCells(currentTank, selectedAction)
             : [];
     const validCellSet = new Set(validCells.map(cell => `${cell.x},${cell.y}`));
@@ -129,12 +151,12 @@ function buildGrid() {
                 const tankColor = occupant.color || DEFAULT_TANK_COLOR;
                 cell.classList.add("has-tank");
                 cell.textContent = occupant.name.substring(0, 3).toUpperCase();
-                cell.title = `${occupant.name} (${x}, ${y})`;
+                cell.title = occupant.name;
                 cell.style.backgroundColor = tankColor;
                 cell.style.color = getReadableTextColor(tankColor);
                 cell.style.fontWeight = "bold";
             } else {
-                cell.textContent = `${x},${y}`;
+                cell.textContent = "";
                 cell.style.backgroundColor = "";
                 cell.style.color = "#222222";
                 cell.style.fontWeight = "normal";
@@ -159,6 +181,8 @@ function selectAction(actionType) {
             action: actionType,
             target: { x: currentTank.x, y: currentTank.y }
         });
+        selectedAction = null;
+        buildGrid();
         document.getElementById("action-instruction").textContent = "Upgrade used.";
         return;
     }
@@ -194,7 +218,7 @@ function handleCellClick(x, y) {
         return;
     }
 
-    if (selectedAction === "HEAL" && Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y)) > (currentTank.range || 2)) {
+    if (["HEAL", "GIFT"].includes(selectedAction) && Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y)) > (currentTank.range || 2)) {
         alert("That target is out of range.");
         return;
     }

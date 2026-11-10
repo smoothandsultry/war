@@ -72,20 +72,72 @@ body {
     margin: 0 auto;
 }
 
-.grid-20 {
+.board-shell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.board-top-labels {
     display: grid;
     grid-template-columns: repeat(20, 32px);
+    gap: 2px;
+    width: calc((20 * 32px) + (19 * 2px));
+    margin-left: 28px;
+    margin-bottom: 6px;
+    justify-items: center;
+    align-items: center;
+}
+
+.board-inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.board-top-labels span,
+.board-side-labels span {
+    width: 32px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #586678;
+}
+
+.board-side-labels {
+    display: grid;
     grid-template-rows: repeat(20, 32px);
     gap: 2px;
+    width: 28px;
+    margin-right: 8px;
+    align-items: center;
+    justify-items: center;
+}
+
+.grid-20 {
+    --cell-size: 32px;
+    --gap: 2px;
+    display: grid;
+    grid-template-columns: repeat(20, var(--cell-size));
+    grid-template-rows: repeat(20, var(--cell-size));
+    gap: var(--gap);
     background-color: #333;
-    padding: 2px;
-    width: calc((20 * 32px) + (19 * 2px) + 4px);
+    border: 2px solid #333;
+    width: calc((20 * var(--cell-size)) + (19 * var(--gap)) + 4px);
     max-width: 100%;
     margin: 0 auto;
+    padding: 0;
 }
 
 .cell {
     background-color: #e2e0e0;
+    border: 1px solid rgba(17, 24, 39, 0.18);
     color: #222222;
     display: flex;
     justify-content: center;
