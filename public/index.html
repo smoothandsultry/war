@@ -18,21 +18,21 @@
         <h2>Logged in as: <span id="user-name">Guest</span></h2>
 
         <h3>Board</h3>
-        <div id="grid-board" class="grid-16"></div>
+        <div id="grid-board" class="grid-20"></div>
 
-        <div>
+        <div class="status-panel">
             <h3>My Status</h3>
             <p>Hearts: <span id="stat-hearts">3</span>/3</p>
             <p>Hidden AP: <span id="stat-ap">0</span></p>
             <p>Range: <span id="stat-range">2</span></p>
         </div>
 
-        <div>
+        <div class="action-panel">
             <h3>Actions</h3>
             <button onclick="selectAction('MOVE')">Move (1 AP)</button>
-            <button onclick="selectAction('SHOOT')">Shoot (1 AP)</button>
+            <button onclick="selectAction('SHOOT')">Shoot (1 AP, range 2)</button>
             <button onclick="selectAction('UPGRADE')">Upgrade Range (3 AP)</button>
-            <button onclick="selectAction('HEAL')">Heal (3 AP)</button>
+            <button onclick="selectAction('HEAL')">Give AP (1 AP, range 2)</button>
             <p id="action-instruction">Select an action, then click a tile.</p>
         </div>
     </div>

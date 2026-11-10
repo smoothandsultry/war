@@ -47,17 +47,40 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    text-align: center;
     padding: 20px 0;
+    gap: 14px;
 }
 
-.grid-16 {
+#game-container h2,
+#game-container h3,
+#game-container p {
+    text-align: center;
+}
+
+.status-panel,
+.action-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+#game-container button {
+    display: block;
+    margin: 0 auto;
+}
+
+.grid-20 {
     display: grid;
-    grid-template-columns: repeat(16, 35px);
-    grid-template-rows: repeat(16, 35px);
+    grid-template-columns: repeat(20, 32px);
+    grid-template-rows: repeat(20, 32px);
     gap: 2px;
     background-color: #333;
     padding: 2px;
-    width: max-content;
+    width: calc((20 * 32px) + (19 * 2px) + 4px);
+    max-width: 100%;
     margin: 0 auto;
 }
 

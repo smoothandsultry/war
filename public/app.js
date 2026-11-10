@@ -1,5 +1,5 @@
 const socket = io();
-const GRID_SIZE = 16;
+const GRID_SIZE = 20;
 const DEFAULT_TANK_COLOR = "#0e37a8";
 let selectedAction = null;
 let playerName = "";
@@ -40,8 +40,30 @@ function joinGame() {
     socket.emit("player-join", { name: playerName, color: playerColor });
 }
 
+function getCurrentTank() {
+    return currentGameState.tanks.find(t => t.name === playerName) || null;
+}
+
+function updateStatusUI() {
+    const currentTank = getCurrentTank();
+    const heartsEl = document.getElementById("stat-hearts");
+    const apEl = document.getElementById("stat-ap");
+    const rangeEl = document.getElementById("stat-range");
+
+    if (heartsEl) heartsEl.textContent = currentTank ? currentTank.hearts : 0;
+    if (apEl) apEl.textContent = currentTank ? currentTank.ap : 0;
+    if (rangeEl) rangeEl.textContent = currentTank ? (currentTank.range || 2) : 2;
+
+    document.querySelectorAll("button[onclick^='selectAction']").forEach((button) => {
+        const canUseAction = !!currentTank && currentTank.ap > 0;
+        button.disabled = !canUseAction;
+        button.style.opacity = canUseAction ? "1" : "0.5";
+    });
+}
+
 socket.on("update-board", (gameState) => {
     currentGameState = gameState;
+    updateStatusUI();
     buildGrid();
 });
 
@@ -79,12 +101,35 @@ function buildGrid() {
 }
 
 function selectAction(actionType) {
+    const currentTank = getCurrentTank();
+    if (!currentTank || currentTank.ap <= 0) {
+        alert("You have no AP left. You cannot use actions.");
+        return;
+    }
+
     selectedAction = actionType;
     document.getElementById("action-instruction").textContent = `Selected: ${selectedAction}. Click a grid cell.`;
 }
 
 function handleCellClick(x, y) {
+    const currentTank = getCurrentTank();
     if (!selectedAction) return alert("Select an action first.");
+    if (!currentTank || currentTank.ap <= 0) {
+        alert("You have no AP left. You cannot use actions.");
+        return;
+    }
+
+    const distance = Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y));
+
+    if (selectedAction === "MOVE" && distance !== 1) {
+        alert("Move only works 1 space away.");
+        return;
+    }
+
+    if (["SHOOT", "HEAL"].includes(selectedAction) && distance > (currentTank.range || 2)) {
+        alert("That target is out of range.");
+        return;
+    }
 
     socket.emit("player-action", { name: playerName, action: selectedAction, target: { x, y } });
 
