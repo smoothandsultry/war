@@ -1,0 +1,84 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', sans-serif;
+}
+
+body {
+    background-color: #e2e2e2;
+    color: #070707;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#login-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 40px;
+    text-align: center;
+}
+
+#login-screen input[type="text"],
+#login-screen input[type="color"] {
+    padding: 8px 10px;
+    border: 1px solid #999;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+#login-screen input[type="color"] {
+    width: 60px;
+    height: 42px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.color-picker-label {
+    font-weight: bold;
+}
+
+#game-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.grid-16 {
+    display: grid;
+    grid-template-columns: repeat(16, 35px);
+    grid-template-rows: repeat(16, 35px);
+    gap: 2px;
+    background-color: #333;
+    padding: 2px;
+    width: max-content;
+    margin: 0 auto;
+}
+
+.cell {
+    background-color: #e2e0e0;
+    color: #222222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cell:hover {
+    background-color: #b1b0b0;
+    color: #fff;
+}
+
+.cell.has-tank {
+    background-color: #0e37a8;
+    color: #fff;
+    font-weight: bold;
+}

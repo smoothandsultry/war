@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>war</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-screen">
+        <h1>war</h1>
+        <input type="text" id="username-input" placeholder="Commander Name" maxlength="15">
+        <label for="color-input" class="color-picker-label">Tank Color</label>
+        <input type="color" id="color-input" value="#0e37a8" title="Choose your tank color">
+        <button onclick="joinGame()">Enter Battle</button>
+    </div>
+
+    <div id="game-container" style="display: none;">
+        <h2>Logged in as: <span id="user-name">Guest</span></h2>
+
+        <h3>Board</h3>
+        <div id="grid-board" class="grid-16"></div>
+
+        <div>
+            <h3>My Status</h3>
+            <p>Hearts: <span id="stat-hearts">3</span>/3</p>
+            <p>Hidden AP: <span id="stat-ap">0</span></p>
+            <p>Range: <span id="stat-range">2</span></p>
+        </div>
+
+        <div>
+            <h3>Actions</h3>
+            <button onclick="selectAction('MOVE')">Move (1 AP)</button>
+            <button onclick="selectAction('SHOOT')">Shoot (1 AP)</button>
+            <button onclick="selectAction('UPGRADE')">Upgrade Range (3 AP)</button>
+            <button onclick="selectAction('HEAL')">Heal (3 AP)</button>
+            <p id="action-instruction">Select an action, then click a tile.</p>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
