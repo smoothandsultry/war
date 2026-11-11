@@ -5,6 +5,7 @@ const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
 const session = require('express-session');
 const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
 const path = require('path');
 const crypto = require('crypto');
 
@@ -37,21 +38,19 @@ const tankSchema = new mongoose.Schema({
 
 const Tank = mongoose.model("Tank", tankSchema);
 
-// Predefined user colors map
 const userColors = {
     "smoothandsultry": "#ff5733",
     "default": "#33ff57"
 };
 
-// Express Session Configuration
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'tanktacticssecret',
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax'
-    }
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI
+    }),
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }
 }));
 
 app.use(passport.initialize());
