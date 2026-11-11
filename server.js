@@ -100,21 +100,6 @@ app.get('/game', (req, res) => {
 
 app.use(express.static(path.join(process.cwd(), 'public')));
 
-app.get("/admin/refill-ap", async (req, res) => {
-    if (!req.isAuthenticated()) {
-        return res.status(401).send("Unauthorized. Please log in first.");
-    }
-
-    try {
-        await Tank.updateMany({ eliminated: false }, { $set: { ap: 10 } });
-        const activeTanks = await Tank.find({ eliminated: false });
-        io.emit("update-board", { tanks: activeTanks });
-        res.send("<h1>All player AP has been refilled to 10 in MongoDB! <a href='/game.html'>Return to Game</a></h1>");
-    } catch (err) {
-        res.status(500).send("Error refilling AP: " + err.message);
-    }
-});
-
 function getActionCost(action) {
     switch (action) {
         case "MOVE": return 1;
