@@ -43,25 +43,18 @@
 
         // Fetch the logged-in user profile from Express/Passport
         fetch('/user')
-            .then(res => {
-                if (!res.ok) throw new Error("Not authenticated");
-                return res.json();
-            })
+            .then(res => res.json())
             .then(user => {
-                // passport-discord gives username or global_name
-                currentUsername = user.username || user.global_name;
-                document.getElementById('user-display').innerText = `Logged in as: ${currentUsername}`;
-                
-                // Emit player-join once we have the verified username
-                socket.emit('player-join', {
-                    name: currentUsername,
-                    discordId: user.id
-                });
-            })
-            .catch(err => {
-                console.error("Auth check failed:", err);
-                document.getElementById('user-display').innerText = "Logged in as: Guest";
+            const username = user.username || user.global_name;
+            
+            // Ensure this element actually updates on the page
+            document.getElementById('user-display').innerText = `Logged in as: ${username}`;
+            
+            socket.emit('player-join', {
+                name: username,
+                discordId: user.id
             });
+        });
 
         // Listen for board updates and render your tank's stats
         socket.on('update-board', (data) => {
