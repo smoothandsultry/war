@@ -38,12 +38,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="app.js"></script>
     <script>
-        // Note: Make sure 'socket' is only declared ONCE across game.html and app.js
-        // If app.js already declares socket = io(), remove 'const socket = io();' from here.
-        if (typeof socket === 'undefined') {
-            var socket = io();
-        }
-        
         let currentUsername = null;
 
         // Fetch the logged-in user profile from Express/Passport
