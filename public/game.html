@@ -38,30 +38,30 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="app.js"></script>
     <script>
+        const socket = io();
+
         fetch('/user')
             .then(res => res.json())
             .then(user => {
-                document.querySelector('h1, h2, #user-display').innerText = `Logged in as: ${user.username}`;
+                const username = user.username || user;
+                document.getElementById('user-display').innerText = `Logged in as: ${username}`;
                 
-                const socket = io();
                 socket.emit('player-join', { 
-                    name: user.username, 
-                    discordId: user.id 
+                    name: username, 
+                    discordId: user.id || username 
                 });
-
-                socket.on('update-board', (data) => {
-                    const myTank = data.tanks.find(t => t.name === user.username);
-                    if (myTank) {
-                        document.getElementById('hearts').innerText = `Hearts: ${myTank.hearts}/3`;
-                        document.getElementById('ap').innerText = `Action Points: ${myTank.ap}`;
-                        document.getElementById('range').innerText = `Range: ${myTank.range}`;
-                    }
-                });
-            })
-            .catch(err => {
-                console.error("Not logged in:", err);
-                window.location.href = '/';
             });
+
+        socket.on('update-board', (data) => {
+            const username = document.getElementById('user-display').innerText.replace('Logged in as: ', '');
+            const myTank = data.tanks.find(t => t.name === username);
+
+            if (myTank) {
+                document.getElementById('hearts').innerText = `Hearts: ${myTank.hearts}/3`;
+                document.getElementById('ap').innerText = `Action Points: ${myTank.ap}`;
+                document.getElementById('range').innerText = `Range: ${myTank.range}`;
+            }
+        });
     </script>
 </body>
 </html>
