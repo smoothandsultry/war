@@ -129,13 +129,11 @@ io.on("connection", (socket) => {
     socket.emit("update-board", gameState);
 
     socket.on("player-join", (data) => {
-        // Assume data.discordId or req.user.id is passed from the client upon login
-        let existingTank = gameState.tanks.find(t => t.discordId === data.discordId);
+        let existingTank = gameState.tanks.find(t => t.name === data.name);
     
         if (existingTank) {
-            // Update socket ID for the active connection, but preserve HP, AP, and position!
             existingTank.id = socket.id;
-            console.log(`Commander ${data.name} reconnected at position (${existingTank.x}, ${existingTank.y}) with ${existingTank.hearts} hearts.`);
+            console.log(`Commander ${data.name} reconnected with ${existingTank.hearts} hearts and ${existingTank.ap} AP.`);
         } else {
             const randomX = Math.floor(Math.random() * 20);
             const randomY = Math.floor(Math.random() * 20);
@@ -143,7 +141,6 @@ io.on("connection", (socket) => {
         
             const newTank = {
                 id: socket.id,
-                discordId: data.discordId,
                 name: data.name,
                 color: assignedColor,
                 x: randomX,
