@@ -303,9 +303,11 @@ io.on("connection", (socket) => {
 });
 
 app.use((err, req, res, next) => {
-    console.error("Unhandled Express Error:", err);
-    const errorMessage = err instanceof Error ? err.message : JSON.stringify(err);
-    res.status(500).send(`<h1>Server Error</h1><p>${errorMessage}</p><a href='/'>Return Home</a>`);
+    if (!(err instanceof Error)) {
+        return next(err);
+    }
+    console.error("Server Error:", err);
+    res.status(500).send(`<h1>Server Error</h1><p>${err.message}</p><a href='/'>Return Home</a>`);
 });
 
 
