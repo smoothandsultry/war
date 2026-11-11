@@ -286,6 +286,12 @@ io.on("connection", (socket) => {
     });
 });
 
+app.use((err, req, res, next) => {
+    console.error("Passport/Auth Error:", err);
+    res.status(500).send(`<h1>Authentication Error</h1><p>${err.message || JSON.stringify(err)}</p><a href='/'>Try Again</a>`);
+});
+
+
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Tank Tactics server running on port ${PORT}`);
