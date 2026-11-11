@@ -129,7 +129,7 @@ function buildGrid() {
     const currentTank = getCurrentTank();
     const validCells = selectedAction === "MOVE"
         ? getValidMoveCells(currentTank)
-        : selectedAction && ["SHOOT", "GIFT"].includes(selectedAction)
+        : selectedAction && ["SHOOT", "HEAL", "GIFT"].includes(selectedAction)
             ? getValidTargetCells(currentTank, selectedAction)
             : [];
     const validCellSet = new Set(validCells.map(cell => `${cell.x},${cell.y}`));
@@ -213,7 +213,7 @@ function handleCellClick(x, y) {
         return;
     }
 
-    if (["SHOOT", "GIFT"].includes(selectedAction) && distance > (currentTank.range || 2)) {
+    if (["SHOOT", "HEAL", "GIFT"].includes(selectedAction) && distance > (currentTank.range || 2)) {
         alert("That target is out of range.");
         return;
     }
