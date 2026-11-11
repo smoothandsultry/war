@@ -38,41 +38,29 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="app.js"></script>
     <script>
-        fetch("/user")
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error("Not authenticated");
-                }
-            })
+        fetch('/user')
+            .then(res => res.json())
             .then(user => {
-                console.log("User data received:", user);
-                const username = user.global_name || user.username;
-                document.getElementById("user-name").textContent = username;
+                document.querySelector('h1, h2, #user-display').innerText = `Logged in as: ${user.username}`;
                 
                 const socket = io();
-                socket.emit("player-join", { 
-                    name: username, 
+                socket.emit('player-join', { 
+                    name: user.username, 
                     discordId: user.id 
                 });
 
-                socket.on("update-board", (gameState) => {
-                    console.log("Game state received:", gameState);
-                    currentGameState = gameState;
-                    const currentTank = getCurrentTank();
-                    updateStatusUI(currentTank);
-                    buildGrid();
-                });
-
-                socket.on("eliminated", (data) => {
-                    alert(data.message);
-                    window.location.href = "/";
+                socket.on('update-board', (data) => {
+                    const myTank = data.tanks.find(t => t.name === user.username);
+                    if (myTank) {
+                        document.getElementById('hearts').innerText = `Hearts: ${myTank.hearts}/3`;
+                        document.getElementById('ap').innerText = `Action Points: ${myTank.ap}`;
+                        document.getElementById('range').innerText = `Range: ${myTank.range}`;
+                    }
                 });
             })
             .catch(err => {
-                console.error("Auth error:", err);
-                window.location.href = "/";
+                console.error("Not logged in:", err);
+                window.location.href = '/';
             });
     </script>
 </body>
