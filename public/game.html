@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <h2>Logged in as: <span id="user-name">Guest</span></h2>
+
+        <div class="board-shell">
+            <div id="board-top-labels" class="board-top-labels"></div>
+
+            <div class="board-inner">
+                <div id="board-side-labels" class="board-side-labels"></div>
+                <div id="grid-board" class="grid-20"></div>
+            </div>
+        </div>
+
+        <div class="status-panel">
+            <h3>My Status</h3>
+            <p>Hearts: <span id="stat-hearts">3</span>/3</p>
+            <p>Action Points: <span id="stat-ap">0</span></p>
+            <p>Range: <span id="stat-range">2</span></p>
+        </div>
+
+        <div class="action-panel">
+            <h3>Actions</h3>
+            <button onclick="selectAction('MOVE')">[1] Move</button>
+            <button onclick="selectAction('SHOOT')">[1] Shoot</button>
+            <button onclick="selectAction('GIFT')">[1] Gift</button>
+            <button onclick="selectAction('UPGRADE')">[3] Upgrade</button>
+            <p id="action-instruction">Select an action, then click a tile.</p>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+    <script>
+        fetch("/user")
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Not authenticated");
+                }
+            })
+            .then(user => {
+                document.getElementById("user-name").textContent = user.username;
+            })
+            .catch(err => {
+                console.error(err);
+                window.location.href = "/";
+            });
+    </script>
+</body>
+</html>

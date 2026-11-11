@@ -2,10 +2,45 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
+const session = require("express-session");
+const passport = require("passport");
+const DiscordStrategy = require("passport-discord").Strategy;
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+
+const DISCORD_CLIENT_ID = "1569895104511082536";
+const DISCORD_CLIENT_SECRET = "5S5RrO7oGZIY_fZ40UYRI7KEJb0foHx6";
+const DISCORD_CALLBACK_URL = "http://localhost:3000/auth/discord/callback";
+
+passport.use(
+    new DiscordStrategy(
+        {
+            clientID: DISCORD_CLIENT_ID,
+            clientSecret: DISCORD_CLIENT_SECRET,
+            callbackURL: DISCORD_CALLBACK_URL,
+            scope: ["identify"]
+        },
+        (accessToken, refreshToken, profile, done) => {
+            return done(null, profile);
+        }
+    )
+);
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
+
+app.use(
+    session({
+        secret: "your-secret-key",
+        resave: false, // Prevents resaving unchanged sessions
+        saveUninitialized: false, // Prevents saving uninitialized sessions
+        cookie: { secure: false } // Set to true if using HTTPS
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req, res, next) => {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
@@ -42,6 +77,48 @@ function getActionCost(action) {
     }
 }
 
+// Routes
+app.get("/auth/discord", passport.authenticate("discord"));
+app.get(
+    "/auth/discord/callback",
+    passport.authenticate("discord", { failureRedirect: "/" }),
+    (req, res) => {
+        console.log("User authenticated:", req.user); // Debugging: Log the user object
+        res.redirect("/game"); // Redirect to the game page after login
+    }
+);
+
+app.get("/logout", (req, res) => {
+    req.logout(() => {
+        res.redirect("/");
+    });
+});
+
+app.get("/user", (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json(req.user);
+    } else {
+        res.status(401).json({ error: "Not authenticated" });
+    }
+});
+
+app.get("/debug", (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({ message: "User is authenticated", user: req.user });
+    } else {
+        res.json({ message: "User is not authenticated" });
+    }
+});
+
+app.get("/game", (req, res) => {
+    if (req.isAuthenticated()) {
+        res.sendFile(path.join(__dirname, "public", "game.html"));
+    } else {
+        res.redirect("/");
+    }
+});
+
+// Socket.IO logic
 io.on("connection", (socket) => {
     console.log(`A user connected: ${socket.id}`);
 
