@@ -87,14 +87,18 @@ app.get('/user', (req, res) => {
     res.json(req.user);
 });
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
+});
+
 app.get('/game', (req, res) => {
     if (!req.isAuthenticated()) {
         return res.redirect('/');
     }
-    res.sendFile(path.join(__dirname, 'public', 'game.html'));
+    res.sendFile(path.join(process.cwd(), 'public', 'game.html'));
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 app.get("/admin/refill-ap", async (req, res) => {
     if (!req.isAuthenticated()) {
