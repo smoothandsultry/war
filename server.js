@@ -129,11 +129,13 @@ io.on("connection", (socket) => {
     socket.emit("update-board", gameState);
 
     socket.on("player-join", (data) => {
-        let existingTank = gameState.tanks.find(t => t.name === data.name);
-
+        // Assume data.discordId or req.user.id is passed from the client upon login
+        let existingTank = gameState.tanks.find(t => t.discordId === data.discordId);
+    
         if (existingTank) {
+            // Update socket ID for the active connection, but preserve HP, AP, and position!
             existingTank.id = socket.id;
-            console.log(`Commander ${data.name} reconnected at (${existingTank.x}, ${existingTank.y})`);
+            console.log(`Commander ${data.name} reconnected at position (${existingTank.x}, ${existingTank.y}) with ${existingTank.hearts} hearts.`);
         } else {
             const randomX = Math.floor(Math.random() * 20);
             const randomY = Math.floor(Math.random() * 20);
@@ -141,6 +143,7 @@ io.on("connection", (socket) => {
         
             const newTank = {
                 id: socket.id,
+                discordId: data.discordId,
                 name: data.name,
                 color: assignedColor,
                 x: randomX,
@@ -154,6 +157,15 @@ io.on("connection", (socket) => {
             console.log(`New tank created for ${data.name}:`, newTank);
         }
     
+        io.emit("update-board", gameState);
+    });
+    
+    socket.on("disconnect", () => {
+        console.log(`Socket disconnected: ${socket.id}`);
+        const tank = gameState.tanks.find(t => t.id === socket.id);
+        if (tank) {
+            tank.id = null;
+        }
         io.emit("update-board", gameState);
     });
 
@@ -245,12 +257,6 @@ io.on("connection", (socket) => {
 
             io.emit("update-board", gameState);
         }
-    });
-
-    socket.on("disconnect", () => {
-        console.log(`User disconnected: ${socket.id}`);
-        gameState.tanks = gameState.tanks.filter(t => t.id !== socket.id);
-        io.emit("update-board", gameState);
     });
 });
 
