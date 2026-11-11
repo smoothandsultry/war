@@ -38,23 +38,29 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="app.js"></script>
     <script>
-        const socket = io();
+        // Note: Make sure 'socket' is only declared ONCE across game.html and app.js
+        // If app.js already declares socket = io(), remove 'const socket = io();' from here.
+        if (typeof socket === 'undefined') {
+            var socket = io();
+        }
+        
         let currentUsername = null;
 
         // Fetch the logged-in user profile from Express/Passport
         fetch('/user')
             .then(res => res.json())
             .then(user => {
-            const username = user.username || user.global_name;
-            
-            // Ensure this element actually updates on the page
-            document.getElementById('user-display').innerText = `Logged in as: ${username}`;
-            
-            socket.emit('player-join', {
-                name: username,
-                discordId: user.id
-            });
-        });
+                currentUsername = user.username || user.global_name;
+                
+                // Match the actual HTML ID: 'user-name'
+                document.getElementById('user-name').innerText = currentUsername;
+                
+                socket.emit('player-join', {
+                    name: currentUsername,
+                    discordId: user.id
+                });
+            })
+            .catch(err => console.error("Failed to load user:", err));
 
         // Listen for board updates and render your tank's stats
         socket.on('update-board', (data) => {
@@ -62,9 +68,10 @@
             
             const myTank = data.tanks.find(t => t.name === currentUsername);
             if (myTank) {
-                document.getElementById('hearts').innerText = `Hearts: ${myTank.hearts}/3`;
-                document.getElementById('ap').innerText = `Action Points: ${myTank.ap}`;
-                document.getElementById('range').innerText = `Range: ${myTank.range}`;
+                // Match the actual HTML IDs: stat-hearts, stat-ap, stat-range
+                document.getElementById('stat-hearts').innerText = myTank.hearts;
+                document.getElementById('stat-ap').innerText = myTank.ap;
+                document.getElementById('stat-range').innerText = myTank.range;
             }
         });
     </script>
