@@ -42,18 +42,31 @@
 
         fetch('/user')
             .then(res => res.json())
-            .then(user => {
-                const username = user.username || user;
+            .then(data => {
+                // Check what /user actually returned (could be an object with .username, or an ID string)
+                console.log("Fetched user data:", data);
+                
+                const username = data.username || data.name || "smoothandsultry"; // Fallback or adjust based on your /user endpoint
+                const discordId = data.id || data.discordId || data;
+
                 document.getElementById('user-display').innerText = `Logged in as: ${username}`;
                 
+                // Emit player-join with the correct user details
                 socket.emit('player-join', { 
                     name: username, 
-                    discordId: user.id || username 
+                    discordId: discordId 
                 });
+            })
+            .catch(err => {
+                console.error("Failed to fetch user:", err);
             });
 
+        // Listen for board state updates from the server
         socket.on('update-board', (data) => {
-            const username = document.getElementById('user-display').innerText.replace('Logged in as: ', '');
+            // Get the current username from the display header
+            const headerText = document.getElementById('user-display').innerText;
+            const username = headerText.replace('Logged in as: ', '');
+            
             const myTank = data.tanks.find(t => t.name === username);
 
             if (myTank) {
