@@ -205,20 +205,15 @@ function handleCellClick(x, y) {
         document.getElementById("action-instruction").textContent = "Select an action, then click a tile.";
         return;
     }
+    
+    const distance = Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y));
 
-    const distance = Math.sqrt((currentTank.x - x) ** 2 + (currentTank.y - y) ** 2);
-
-    if (selectedAction === "MOVE" && Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y)) !== 1) {
+    if (selectedAction === "MOVE" && distance !== 1) {
         alert("Move only works 1 space away.");
         return;
     }
 
-    if (selectedAction === "SHOOT" && distance > (currentTank.range || 1)) {
-        alert("That target is out of range.");
-        return;
-    }
-
-    if (["HEAL", "GIFT"].includes(selectedAction) && Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y)) > (currentTank.range || 2)) {
+    if (["SHOOT", "HEAL", "GIFT"].includes(selectedAction) && distance > (currentTank.range || 2)) {
         alert("That target is out of range.");
         return;
     }

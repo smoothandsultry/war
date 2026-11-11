@@ -14,6 +14,11 @@ const DISCORD_CLIENT_ID = "1569895104511082536";
 const DISCORD_CLIENT_SECRET = "5S5RrO7oGZIY_fZ40UYRI7KEJb0foHx6";
 const DISCORD_CALLBACK_URL = "http://localhost:3000/auth/discord/callback";
 
+const userColors = {
+    "smoothandsultry": "#ff5733", // Example user
+    "default": "#0e37a8"         // Default
+};
+
 passport.use(
     new DiscordStrategy(
         {
@@ -118,30 +123,37 @@ app.get("/game", (req, res) => {
     }
 });
 
-// Socket.IO logic
 io.on("connection", (socket) => {
     console.log(`A user connected: ${socket.id}`);
 
     socket.emit("update-board", gameState);
 
     socket.on("player-join", (data) => {
-        const randomX = Math.floor(Math.random() * 20);
-        const randomY = Math.floor(Math.random() * 20);
+        let existingTank = gameState.tanks.find(t => t.name === data.name);
 
-        const newTank = {
-            id: socket.id,
-            name: data.name,
-            color: data.color || "#0e37a8",
-            x: randomX,
-            y: randomY,
-            hearts: 3,
-            ap: 10,
-            range: 2
-        };
-
-        gameState.tanks.push(newTank);
-        console.log(`Commander ${data.name} spawned at (${randomX}, ${randomY}) with color ${newTank.color}`);
-
+        if (existingTank) {
+            existingTank.id = socket.id;
+            console.log(`Commander ${data.name} reconnected at (${existingTank.x}, ${existingTank.y})`);
+        } else {
+            const randomX = Math.floor(Math.random() * 20);
+            const randomY = Math.floor(Math.random() * 20);
+            const assignedColor = userColors[data.name] || userColors["default"];
+        
+            const newTank = {
+                id: socket.id,
+                name: data.name,
+                color: assignedColor,
+                x: randomX,
+                y: randomY,
+                hearts: 3,
+                ap: 10,
+                range: 2
+            };
+        
+            gameState.tanks.push(newTank);
+            console.log(`New tank created for ${data.name}:`, newTank);
+        }
+    
         io.emit("update-board", gameState);
     });
 
