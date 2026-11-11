@@ -48,9 +48,15 @@
             })
             .then(user => {
                 console.log("User data received:", user);
-                document.getElementById("user-name").textContent = user.username;
+                const username = user.global_name || user.username;
+                document.getElementById("user-name").textContent = username;
+                
                 const socket = io();
-                socket.emit("player-join", { name: user.username });
+                socket.emit("player-join", { 
+                    name: username, 
+                    discordId: user.id 
+                });
+
                 socket.on("update-board", (gameState) => {
                     console.log("Game state received:", gameState);
                     currentGameState = gameState;
@@ -58,9 +64,14 @@
                     updateStatusUI(currentTank);
                     buildGrid();
                 });
+
+                socket.on("eliminated", (data) => {
+                    alert(data.message);
+                    window.location.href = "/";
+                });
             })
             .catch(err => {
-                console.error(err);
+                console.error("Auth error:", err);
                 window.location.href = "/";
             });
     </script>
