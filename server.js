@@ -70,7 +70,7 @@ app.get('/auth/discord', passport.authenticate('discord'));
 app.get('/auth/discord/callback', passport.authenticate('discord', {
     failureRedirect: '/'
 }), (req, res) => {
-    res.redirect('/game.html');
+    res.redirect('/game');
 });
 
 app.get('/logout', (req, res, next) => {
@@ -85,6 +85,13 @@ app.get('/user', (req, res) => {
         return res.status(401).json({ error: "Unauthorized" });
     }
     res.json(req.user);
+});
+
+app.get('/game', (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.redirect('/');
+    }
+    res.sendFile(path.join(__dirname, 'public', 'game.html'));
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
