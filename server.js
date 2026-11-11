@@ -69,9 +69,15 @@ passport.use(new DiscordStrategy({
 app.get('/auth/discord', passport.authenticate('discord'));
 app.get('/auth/discord/callback', passport.authenticate('discord', {
     failureRedirect: '/'
-}), (req, res) => {
-    res.redirect('/game');
-});
+    }), (req, res) => {
+        req.session.save((err) => {
+            if (err) {
+                console.error("Session save error:", err);
+                return res.redirect('/');
+            }
+            res.redirect('/game');
+        });
+    });
 
 app.get('/logout', (req, res, next) => {
     req.logout((err) => {
@@ -287,8 +293,11 @@ io.on("connection", (socket) => {
 });
 
 app.use((err, req, res, next) => {
-    console.error("Passport/Auth Error:", err);
-    res.status(500).send(`<h1>Authentication Error</h1><p>${err.message || JSON.stringify(err)}</p><a href='/'>Try Again</a>`);
+    if (!(err instanceof Error)) {
+        return next(err);
+    }
+    console.error("Server Error:", err);
+    res.status(500).send(`<h1>Server Error</h1><p>${err.message}</p><a href='/'>Try Again</a>`);
 });
 
 
