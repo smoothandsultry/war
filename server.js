@@ -60,6 +60,8 @@ let gameState = {
     tanks: []
 };
 
+const eliminatedPlayers = new Set();
+
 function getDistance(a, b) {
     return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 }
@@ -129,11 +131,17 @@ io.on("connection", (socket) => {
     socket.emit("update-board", gameState);
 
     socket.on("player-join", (data) => {
+        if (eliminatedPlayers.has(data.name)) {
+            console.log(`Commander ${data.name} attempted to join, but is already eliminated.`);
+            socket.emit("eliminated", { message: "Your tank was destroyed! You cannot respawn until a new match begins." });
+            return;
+        }
+    
         let existingTank = gameState.tanks.find(t => t.name === data.name);
     
         if (existingTank) {
             existingTank.id = socket.id;
-            console.log(`Commander ${data.name} reconnected with ${existingTank.hearts} hearts and ${existingTank.ap} AP.`);
+            console.log(`Commander ${data.name} reconnected at (${existingTank.x}, ${existingTank.y})`);
         } else {
             const randomX = Math.floor(Math.random() * 20);
             const randomY = Math.floor(Math.random() * 20);
@@ -249,6 +257,7 @@ io.on("connection", (socket) => {
 
             if (target.hearts <= 0) {
                 console.log(`Commander ${target.name} was eliminated`);
+                eliminatedPlayers.add(target.name);
                 gameState.tanks = gameState.tanks.filter(t => t.name !== target.name);
             }
 
