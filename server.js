@@ -74,7 +74,6 @@ function getActionCost(action) {
     switch (action) {
         case "MOVE":
         case "SHOOT":
-        case "HEAL":
         case "GIFT":
             return 1;
         case "UPGRADE":
@@ -208,7 +207,7 @@ io.on("connection", (socket) => {
             return;
         }
 
-        if (["HEAL", "GIFT"].includes(data.action)) {
+        if (["GIFT"].includes(data.action)) {
             const target = gameState.tanks.find(t =>
                 t.name !== tank.name &&
                 t.x === data.target.x &&
