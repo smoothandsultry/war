@@ -102,11 +102,15 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
 });
 
-app.get('/game', (req, res) => {
+app.get('/game', async (req, res) => {
     if (!req.isAuthenticated()) {
         return res.redirect('/');
     }
-    res.sendFile(path.join(process.cwd(), 'public', 'game.html'));
+    try {
+        res.sendFile(path.join(process.cwd(), 'public', 'game.html'));
+    } catch (err) {
+        res.status(500).send("Error loading game: " + err.message);
+    }
 });
 
 app.use(express.static(path.join(process.cwd(), 'public')));
