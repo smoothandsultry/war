@@ -102,14 +102,15 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
 });
 
-app.get('/game', async (req, res) => {
+app.get('/game', (req, res) => {
     if (!req.isAuthenticated()) {
         return res.redirect('/');
     }
     try {
         res.sendFile(path.join(process.cwd(), 'public', 'game.html'));
     } catch (err) {
-        res.status(500).send("Error loading game: " + err.message);
+        console.error("Game route error:", err);
+        res.status(500).send(`Error loading game: ${err.message}`);
     }
 });
 
@@ -302,11 +303,9 @@ io.on("connection", (socket) => {
 });
 
 app.use((err, req, res, next) => {
-    if (!(err instanceof Error)) {
-        return next(err);
-    }
-    console.error("Server Error:", err);
-    res.status(500).send(`<h1>Server Error</h1><p>${err.message}</p><a href='/'>Try Again</a>`);
+    console.error("Unhandled Express Error:", err);
+    const errorMessage = err instanceof Error ? err.message : JSON.stringify(err);
+    res.status(500).send(`<h1>Server Error</h1><p>${errorMessage}</p><a href='/'>Return Home</a>`);
 });
 
 
