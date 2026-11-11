@@ -35,40 +35,39 @@
         </div>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
     <script src="app.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
+        let currentUsername = null;
 
+        // Fetch the logged-in user profile from Express/Passport
         fetch('/user')
-            .then(res => res.json())
-            .then(data => {
-                // Check what /user actually returned (could be an object with .username, or an ID string)
-                console.log("Fetched user data:", data);
+            .then(res => {
+                if (!res.ok) throw new Error("Not authenticated");
+                return res.json();
+            })
+            .then(user => {
+                // passport-discord gives username or global_name
+                currentUsername = user.username || user.global_name;
+                document.getElementById('user-display').innerText = `Logged in as: ${currentUsername}`;
                 
-                const username = data.username || data.name || "smoothandsultry"; // Fallback or adjust based on your /user endpoint
-                const discordId = data.id || data.discordId || data;
-
-                document.getElementById('user-display').innerText = `Logged in as: ${username}`;
-                
-                // Emit player-join with the correct user details
-                socket.emit('player-join', { 
-                    name: username, 
-                    discordId: discordId 
+                // Emit player-join once we have the verified username
+                socket.emit('player-join', {
+                    name: currentUsername,
+                    discordId: user.id
                 });
             })
             .catch(err => {
-                console.error("Failed to fetch user:", err);
+                console.error("Auth check failed:", err);
+                document.getElementById('user-display').innerText = "Logged in as: Guest";
             });
 
-        // Listen for board state updates from the server
+        // Listen for board updates and render your tank's stats
         socket.on('update-board', (data) => {
-            // Get the current username from the display header
-            const headerText = document.getElementById('user-display').innerText;
-            const username = headerText.replace('Logged in as: ', '');
+            if (!currentUsername || !data.tanks) return;
             
-            const myTank = data.tanks.find(t => t.name === username);
-
+            const myTank = data.tanks.find(t => t.name === currentUsername);
             if (myTank) {
                 document.getElementById('hearts').innerText = `Hearts: ${myTank.hearts}/3`;
                 document.getElementById('ap').innerText = `Action Points: ${myTank.ap}`;

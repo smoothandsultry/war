@@ -5,7 +5,6 @@ const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
 const session = require('express-session');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo');
 const path = require('path');
 const crypto = require('crypto');
 
@@ -38,27 +37,29 @@ const tankSchema = new mongoose.Schema({
 
 const Tank = mongoose.model("Tank", tankSchema);
 
+// Predefined user colors map
 const userColors = {
     "smoothandsultry": "#ff5733",
     "default": "#33ff57"
 };
 
+// Express Session Configuration
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    secret: process.env.SESSION_SECRET || 'tanktacticssecret',
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI
-    }),
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
+    }
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 // Passport Discord Strategy
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser((id, done) => done(null, id));
 
 passport.use(new DiscordStrategy({
     clientID: process.env.DISCORD_CLIENT_ID,
