@@ -40,23 +40,23 @@
     <script>
         let currentUsername = null;
 
-        // Fetch the logged-in user profile from Express/Passport
         fetch('/user')
-            .then(res => res.json())
-            .then(user => {
-                currentUsername = user.username || user.global_name;
-                
-                // Match the actual HTML ID: 'user-name'
-                document.getElementById('user-name').innerText = currentUsername;
-                
-                socket.emit('player-join', {
-                    name: currentUsername,
-                    discordId: user.id
-                });
-            })
-            .catch(err => console.error("Failed to load user:", err));
+        .then(res => res.json())
+        .then(user => {
+            console.log("Full passport user profile received:", user);
+            
+            const username = user.username || user.global_name || user.displayName || user.name || "smoothandsultry";
+            const userId = user.id || user.discordId;
+            
+            document.getElementById('user-name').innerText = username;
+            
+            socket.emit('player-join', {
+                name: username,
+                discordId: userId
+            });
+        })
+        .catch(err => console.error("Failed to load user profile:", err));
 
-        // Listen for board updates and render your tank's stats
         socket.on('update-board', (data) => {
             if (!currentUsername || !data.tanks) return;
             
