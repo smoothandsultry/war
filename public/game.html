@@ -47,20 +47,13 @@
                 }
             })
             .then(user => {
-                playerName = user.username;
-                document.getElementById("user-name").textContent = playerName;
-
+                console.log("User data received:", user);
+                document.getElementById("user-name").textContent = user.username;
                 const socket = io();
-                console.log("Emitting player-join event for user:", playerName);
-                
-                socket.emit("player-join", {
-                    name: playerName
-                });
-
+                socket.emit("player-join", { name: user.username });
                 socket.on("update-board", (gameState) => {
-                    console.log("Game state received on client:", gameState);
+                    console.log("Game state received:", gameState);
                     currentGameState = gameState;
-
                     const currentTank = getCurrentTank();
                     updateStatusUI(currentTank);
                     buildGrid();
