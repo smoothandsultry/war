@@ -6,6 +6,11 @@ const DiscordStrategy = require('passport-discord').Strategy;
 const session = require('express-session');
 const mongoose = require('mongoose');
 const path = require('path');
+const crypto = require('crypto');
+
+if (!global.crypto) {
+    global.crypto = crypto;
+}
 
 const app = express();
 const server = http.createServer(app);
