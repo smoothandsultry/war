@@ -12,7 +12,7 @@ const io = new Server(server);
 
 const DISCORD_CLIENT_ID = "1569895104511082536";
 const DISCORD_CLIENT_SECRET = "5S5RrO7oGZIY_fZ40UYRI7KEJb0foHx6";
-const DISCORD_CALLBACK_URL = "https://war-ehdncq.fly.dev/auth/callback";
+const DISCORD_CALLBACK_URL = "https://war-ehdncq.fly.dev/auth/discord/callback";
 
 const userColors = {
     "smoothandsultry": "#ff5733", // Example user
