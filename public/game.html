@@ -41,28 +41,35 @@
         let currentUsername = null;
 
         fetch('/user')
-        .then(res => res.json())
-        .then(user => {
-            console.log("Full passport user profile received:", user);
-            
-            const username = user.username || user.global_name || user.displayName || user.name || "smoothandsultry";
-            const userId = user.id || user.discordId;
-            
-            document.getElementById('user-name').innerText = username;
-            
-            socket.emit('player-join', {
-                name: username,
-                discordId: userId
-            });
-        })
-        .catch(err => console.error("Failed to load user profile:", err));
+            .then(res => res.json())
+            .then(userData => {
+                console.log("Full passport user received:", userData);
+                
+                let username, userId;
+                if (typeof userData === 'object' && userData !== null) {
+                    username = userData.username || userData.global_name || userData.displayName || "smoothandsultry";
+                    userId = userData.id;
+                } else {
+                    userId = userData;
+                    username = "smoothandsultry";
+                }
+                
+                currentUsername = username;
+                document.getElementById('user-name').innerText = currentUsername;
+                
+                socket.emit('player-join', {
+                    name: currentUsername,
+                    discordId: userId
+                });
+            })
+            .catch(err => console.error("Failed to load user:", err));
 
+        // Listen for board updates and render your tank's stats
         socket.on('update-board', (data) => {
             if (!currentUsername || !data.tanks) return;
             
             const myTank = data.tanks.find(t => t.name === currentUsername);
             if (myTank) {
-                // Match the actual HTML IDs: stat-hearts, stat-ap, stat-range
                 document.getElementById('stat-hearts').innerText = myTank.hearts;
                 document.getElementById('stat-ap').innerText = myTank.ap;
                 document.getElementById('stat-range').innerText = myTank.range;
