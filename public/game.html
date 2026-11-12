@@ -43,26 +43,17 @@
         fetch('/user')
             .then(res => res.json())
             .then(userData => {
-                console.log("Full passport user received:", userData);
+                playerName = typeof userData === 'object' ? (userData.username || userData.global_name || "smoothandsultry") : "smoothandsultry";
+                const userId = typeof userData === 'object' ? userData.id : userData;
+
+                const nameEl = document.getElementById("user-name");
+                if (nameEl) nameEl.textContent = playerName;
+
+                renderBoardRuler();
                 
-                let username, userId;
-                if (typeof userData === 'object' && userData !== null) {
-                    username = userData.username || userData.global_name || userData.displayName || "smoothandsultry";
-                    userId = userData.id;
-                } else {
-                    userId = userData;
-                    username = "smoothandsultry";
-                }
-                
-                currentUsername = username;
-                document.getElementById('user-name').innerText = currentUsername;
-                
-                socket.emit('player-join', {
-                    name: currentUsername,
-                    discordId: userId
-                });
+                socket.emit("player-join", { name: playerName, discordId: userId, color: playerColor });
             })
-            .catch(err => console.error("Failed to load user:", err));
+            .catch(err => console.error("Failed to fetch user profile:", err));
 
         // Listen for board updates and render your tank's stats
         socket.on('update-board', (data) => {
