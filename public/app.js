@@ -143,7 +143,7 @@ function buildGrid() {
     const board = document.getElementById("grid-board");
     board.innerHTML = "";
 
-    const movedCells = new Set();
+    const movedCells = new Map();
     const currentPositions = new Map();
 
     currentGameState.tanks.forEach((tank) => {
@@ -152,7 +152,12 @@ function buildGrid() {
 
         const previousPosition = previousTankPositions.get(tank.name);
         if (previousPosition && (previousPosition.x !== tank.x || previousPosition.y !== tank.y)) {
-            movedCells.add(positionKey);
+            const dx = tank.x - previousPosition.x;
+            const dy = tank.y - previousPosition.y;
+            movedCells.set(positionKey, {
+                x: dx,
+                y: dy
+            });
         }
     });
 
@@ -184,8 +189,11 @@ function buildGrid() {
             if (occupant) {
                 const tankColor = occupant.color || DEFAULT_TANK_COLOR;
                 cell.classList.add("has-tank");
-                if (movedCells.has(`${x},${y}`)) {
+                const moveDirection = movedCells.get(`${x},${y}`);
+                if (moveDirection) {
                     cell.classList.add("tank-moved");
+                    cell.style.setProperty("--slide-x", `${moveDirection.x * 10}px`);
+                    cell.style.setProperty("--slide-y", `${moveDirection.y * 10}px`);
                 }
                 cell.textContent = occupant.name.substring(0, 3).toUpperCase();
                 cell.title = occupant.name;
