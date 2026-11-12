@@ -140,6 +140,7 @@ io.on("connection", (socket) => {
     async function sendUpdatedBoard() {
         const activeTanks = await Tank.find({ eliminated: false });
         io.emit("update-board", { tanks: activeTanks });
+        console.log("Game state sent to clients:", { tanks: activeTanks });
     }
 
     sendUpdatedBoard();
@@ -147,7 +148,7 @@ io.on("connection", (socket) => {
     socket.on("player-join", async (data) => {
         try {
             let tank = await Tank.findOne({ name: data.name });
-
+    
             if (tank) {
                 if (tank.eliminated) {
                     console.log(`Commander ${data.name} attempted to join, but is already eliminated.`);
@@ -160,26 +161,24 @@ io.on("connection", (socket) => {
             } else {
                 const randomX = Math.floor(Math.random() * 20);
                 const randomY = Math.floor(Math.random() * 20);
-                const assignedColor = userColors[data.name] || userColors["default"];
-            
+    
                 tank = new Tank({
                     id: socket.id,
-                    discordId: data.discordId || data.name,
+                    discordId: data.discordId,
                     name: data.name,
-                    color: assignedColor,
+                    color: userColors[data.name] || userColors["default"],
                     x: randomX,
                     y: randomY,
                     hearts: 3,
                     ap: 10,
-                    range: 2,
-                    eliminated: false
+                    range: 2
                 });
-            
+    
                 await tank.save();
-                console.log(`New tank created in database for ${data.name}:`, tank);
+                console.log(`New tank created for ${data.name}:`, tank);
             }
-        
-            await sendUpdatedBoard();
+    
+            sendUpdatedBoard();
         } catch (err) {
             console.error("Error in player-join:", err);
         }
