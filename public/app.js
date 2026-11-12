@@ -183,6 +183,20 @@ function buildGrid() {
 function selectAction(actionType) {
     const currentTank = getCurrentTank();
     
+    const costs = {
+        "MOVE": 1,
+        "SHOOT": 1,
+        "UPGRADE": 3,
+        "GIFT": 1
+    };
+
+    const actionCost = costs[actionType] || 1;
+
+    if (currentTank && currentTank.ap < actionCost) {
+        alert(`Not enough AP! ${actionType} requires ${actionCost} AP, but you only have ${currentTank.ap} AP.`);
+        return;
+    }
+
     if (actionType === "UPGRADE") {
         socket.emit("player-action", {
             name: playerName,
