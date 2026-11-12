@@ -105,14 +105,24 @@ function updateStatusUI() {
     const apEl = document.getElementById("stat-ap");
     const rangeEl = document.getElementById("stat-range");
 
+    const currentAp = currentTank ? currentTank.ap : 10;
+
     if (heartsEl) heartsEl.textContent = currentTank ? currentTank.hearts : 3;
-    if (apEl) apEl.textContent = currentTank ? currentTank.ap : 10;
+    if (apEl) apEl.textContent = currentAp;
     if (rangeEl) rangeEl.textContent = currentTank ? (currentTank.range || 2) : 2;
 
+    const isOutOfAp = currentTank && currentTank.ap <= 0;
+
     document.querySelectorAll("button[onclick^='selectAction'], .action-panel button").forEach((button) => {
-        button.disabled = false;
-        button.style.opacity = "1";
-        button.style.cursor = "pointer";
+        if (isOutOfAp) {
+            button.disabled = true;
+            button.style.opacity = "0.5";
+            button.style.cursor = "not-allowed";
+        } else {
+            button.disabled = false;
+            button.style.opacity = "1";
+            button.style.cursor = "pointer";
+        }
     });
 }
 
