@@ -333,7 +333,7 @@ body {
     }
 
     .game-layout {
-        flex-direction: column;
+        flex-direction: column-reverse;
         align-items: center;
         gap: 8px;
         width: min(100%, calc(100vw - 16px));
