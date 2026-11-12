@@ -146,6 +146,17 @@ io.on("connection", (socket) => {
     sendUpdatedBoard();
 
     socket.on("player-join", async (data) => {
+        socket.on('update-board', (data) => {
+    if (!currentUsername || !data.tanks) return;
+        console.log("Tank after creation or update:", tank);
+    const myTank = data.tanks.find(t => t.name === currentUsername);
+    if (myTank) {
+        document.getElementById('stat-hearts').innerText = myTank.hearts;
+        document.getElementById('stat-ap').innerText = myTank.ap;
+        document.getElementById('stat-range').innerText = myTank.range;
+    }
+    console.log("Game state sent to clients:", { tanks: activeTanks });
+});
         try {
             let tank = await Tank.findOne({ name: data.name });
     

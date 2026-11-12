@@ -127,11 +127,13 @@ function buildGrid() {
     board.innerHTML = "";
 
     const currentTank = getCurrentTank();
+    
     const validCells = selectedAction === "MOVE"
         ? getValidMoveCells(currentTank)
-        : selectedAction && ["SHOOT", "GIFT"].includes(selectedAction)
+        : selectedAction && ["SHOOT", "HEAL", "GIFT"].includes(selectedAction)
             ? getValidTargetCells(currentTank, selectedAction)
             : [];
+            
     const validCellSet = new Set(validCells.map(cell => `${cell.x},${cell.y}`));
 
     for (let y = 0; y < GRID_SIZE; y++) {
@@ -171,7 +173,6 @@ function buildGrid() {
 function selectAction(actionType) {
     const currentTank = getCurrentTank();
     
-    // Allow action selection even if frontend AP state lags behind MongoDB
     if (actionType === "UPGRADE") {
         socket.emit("player-action", {
             name: playerName,
