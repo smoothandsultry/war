@@ -6,6 +6,7 @@ let playerName = "";
 let playerColor = DEFAULT_TANK_COLOR;
 let currentGameState = { tanks: [] };
 let previousTankPositions = new Map();
+let lastShotCell = null;
 
 function isCellOccupied(x, y, ignoreName = null) {
     const occupied = currentGameState.tanks.find((tank) => !tank.eliminated && tank.x === x && tank.y === y && tank.name !== ignoreName);
@@ -383,9 +384,13 @@ function buildGrid() {
             cell.dataset.x = x;
             cell.dataset.y = y;
 
-            const isValidTarget = validCellSet.has(`${x},${y}`);
+            const cellKey = `${x},${y}`;
+            const isValidTarget = validCellSet.has(cellKey);
             if (isValidTarget) {
                 cell.classList.add("valid-target");
+            }
+            if (lastShotCell && cellKey === `${lastShotCell.x},${lastShotCell.y}`) {
+                cell.classList.add("shot-flash");
             }
 
             const occupant = currentGameState.tanks.find(t => t.x === x && t.y === y);
@@ -494,10 +499,25 @@ function handleCellClick(x, y) {
         return;
     }
 
-    socket.emit("player-action", { name: playerName, action: selectedAction, target: { x, y } });
+    const actionToUse = selectedAction;
+
+    if (actionToUse === "SHOOT") {
+        lastShotCell = { x, y };
+    }
+
+    socket.emit("player-action", { name: playerName, action: actionToUse, target: { x, y } });
 
     selectedAction = null;
     syncActionSelectionUI();
     buildGrid();
     document.getElementById("action-instruction").textContent = "Select an action, then click a tile.";
+
+    if (actionToUse === "SHOOT") {
+        setTimeout(() => {
+            if (lastShotCell && lastShotCell.x === x && lastShotCell.y === y) {
+                lastShotCell = null;
+                buildGrid();
+            }
+        }, 220);
+    }
 }
