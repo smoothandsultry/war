@@ -127,7 +127,7 @@ function getActionCost(action) {
 }
 
 function getDistance(a, b) {
-    return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+    return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 }
 
 function getCircularDistance(a, b) {
