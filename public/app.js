@@ -80,16 +80,16 @@ function getTimeOfDayPalette() {
             panelInner: "rgba(227, 234, 250, 0.7)",
             panelText: "#182334",
             panelMuted: "#586b8e",
-            userPillBg: "rgba(220, 229, 247, 0.84)",
+            userPillBg: "rgba(202, 214, 236, 0.9)",
             userPillText: "#243750",
-            apBadgeBg: "rgba(214, 226, 255, 0.85)",
+            apBadgeBg: "rgba(196, 210, 240, 0.9)",
             apBadgeText: "#2d3c59",
-            actionBg: "rgba(230, 237, 249, 0.9)",
-            actionSelected: "rgba(202, 219, 255, 1)",
-            actionBorder: "rgba(117, 141, 201, 0.18)",
+            actionBg: "rgba(196, 208, 233, 0.9)",
+            actionSelected: "rgba(145, 175, 235, 0.96)",
+            actionBorder: "rgba(92, 122, 188, 0.32)",
             actionText: "#1c273a",
             actionSubtext: "#475b7d",
-            actionCostBg: "rgba(30, 42, 63, 0.06)",
+            actionCostBg: "rgba(57, 73, 101, 0.12)",
             actionCostText: "#3d4a63"
         };
     }
@@ -108,16 +108,16 @@ function getTimeOfDayPalette() {
             panelInner: "rgba(227, 234, 250, 0.7)",
             panelText: "#1a2b3d",
             panelMuted: "#5b728e",
-            userPillBg: "rgba(220, 229, 247, 0.82)",
+            userPillBg: "rgba(201, 215, 239, 0.9)",
             userPillText: "#243750",
-            apBadgeBg: "rgba(214, 226, 255, 0.85)",
+            apBadgeBg: "rgba(195, 209, 236, 0.9)",
             apBadgeText: "#2d3c59",
-            actionBg: "rgba(230, 237, 249, 0.9)",
-            actionSelected: "rgba(202, 219, 255, 1)",
-            actionBorder: "rgba(117, 141, 201, 0.18)",
+            actionBg: "rgba(194, 207, 230, 0.9)",
+            actionSelected: "rgba(142, 172, 232, 0.96)",
+            actionBorder: "rgba(92, 122, 188, 0.32)",
             actionText: "#1c273a",
             actionSubtext: "#475b7d",
-            actionCostBg: "rgba(30, 42, 63, 0.06)",
+            actionCostBg: "rgba(57, 73, 101, 0.12)",
             actionCostText: "#3d4a63"
         };
     }
@@ -136,16 +136,16 @@ function getTimeOfDayPalette() {
             panelInner: "rgba(239, 224, 201, 0.72)",
             panelText: "#31251b",
             panelMuted: "#6a4d3d",
-            userPillBg: "rgba(230, 216, 188, 0.82)",
+            userPillBg: "rgba(217, 201, 172, 0.9)",
             userPillText: "#332b26",
-            apBadgeBg: "rgba(226, 205, 167, 0.82)",
+            apBadgeBg: "rgba(214, 191, 153, 0.9)",
             apBadgeText: "#342a26",
-            actionBg: "rgba(240, 226, 204, 0.85)",
-            actionSelected: "rgba(222, 190, 129, 0.92)",
-            actionBorder: "rgba(146, 111, 74, 0.2)",
+            actionBg: "rgba(217, 200, 173, 0.9)",
+            actionSelected: "rgba(186, 149, 96, 0.94)",
+            actionBorder: "rgba(120, 89, 62, 0.24)",
             actionText: "#2f241d",
             actionSubtext: "#5f4d3d",
-            actionCostBg: "rgba(69, 52, 35, 0.12)",
+            actionCostBg: "rgba(69, 52, 35, 0.14)",
             actionCostText: "#493d2d"
         };
     }
@@ -164,16 +164,16 @@ function getTimeOfDayPalette() {
             panelInner: "rgba(29, 39, 59, 0.86)",
             panelText: "#edf2ff",
             panelMuted: "#c7d2ec",
-            userPillBg: "rgba(34, 45, 64, 0.74)",
+            userPillBg: "rgba(31, 42, 58, 0.9)",
             userPillText: "#edf2ff",
-            apBadgeBg: "rgba(36, 46, 64, 0.8)",
+            apBadgeBg: "rgba(42, 55, 74, 0.9)",
             apBadgeText: "#edf2ff",
-            actionBg: "rgba(24, 35, 52, 0.9)",
-            actionSelected: "rgba(66, 89, 139, 0.9)",
-            actionBorder: "rgba(128, 153, 202, 0.35)",
+            actionBg: "rgba(28, 39, 55, 0.96)",
+            actionSelected: "rgba(69, 94, 145, 0.96)",
+            actionBorder: "rgba(128, 153, 202, 0.42)",
             actionText: "#edf2ff",
             actionSubtext: "#c9d7ff",
-            actionCostBg: "rgba(10, 16, 28, 0.58)",
+            actionCostBg: "rgba(8, 14, 25, 0.64)",
             actionCostText: "#dfeaff"
         };
     }
@@ -191,16 +191,16 @@ function getTimeOfDayPalette() {
         panelInner: "rgba(20, 30, 47, 0.88)",
         panelText: "#edf2ff",
         panelMuted: "#cfe0ff",
-        userPillBg: "rgba(25, 35, 52, 0.76)",
+        userPillBg: "rgba(25, 35, 52, 0.9)",
         userPillText: "#edf2ff",
-        apBadgeBg: "rgba(23, 33, 49, 0.8)",
+        apBadgeBg: "rgba(22, 31, 46, 0.92)",
         apBadgeText: "#edf2ff",
-        actionBg: "rgba(19, 30, 49, 0.9)",
-        actionSelected: "rgba(45, 72, 118, 0.9)",
-        actionBorder: "rgba(127, 147, 189, 0.36)",
+        actionBg: "rgba(22, 34, 51, 0.96)",
+        actionSelected: "rgba(55, 80, 118, 0.96)",
+        actionBorder: "rgba(127, 147, 189, 0.42)",
         actionText: "#edf2ff",
         actionSubtext: "#cfe0ff",
-        actionCostBg: "rgba(10, 16, 28, 0.58)",
+        actionCostBg: "rgba(8, 16, 26, 0.68)",
         actionCostText: "#dfeaff"
     };
 }
@@ -418,9 +418,6 @@ function buildGrid() {
 
 function selectAction(actionType) {
     const currentTank = getCurrentTank();
-    selectedAction = actionType;
-    syncActionSelectionUI();
-    
     const costs = {
         "MOVE": 1,
         "SHOOT": 1,
@@ -434,6 +431,17 @@ function selectAction(actionType) {
         alert(`Not enough AP! ${actionType} requires ${actionCost} AP, but you only have ${currentTank.ap} AP.`);
         return;
     }
+
+    if (selectedAction === actionType) {
+        selectedAction = null;
+        syncActionSelectionUI();
+        buildGrid();
+        document.getElementById("action-instruction").textContent = "Select an action, then click a tile.";
+        return;
+    }
+
+    selectedAction = actionType;
+    syncActionSelectionUI();
 
     if (actionType === "UPGRADE") {
         socket.emit("player-action", {

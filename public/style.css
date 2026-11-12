@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Redaction+50:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
     --page-bg-top: #edf4ff;
@@ -32,7 +32,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Redaction 50', serif;
     font-size: 12px;
 }
 
@@ -171,15 +171,17 @@ body {
     background: var(--user-pill-bg);
     border: 1px solid rgba(110, 126, 170, 0.18);
     color: var(--user-pill-text);
-    font-size: 0.72rem;
+    font-size: 0.56rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
+    line-height: 1.4;
 }
 
 .user-pill span {
     font-weight: 900;
     margin-left: 0.35em;
+    font-size: 0.9em;
 }
 
 .ap-badge {
@@ -325,7 +327,7 @@ body {
     text-align: center;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 760px) {
     #game-container {
         padding-top: 10px;
     }
@@ -492,7 +494,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 10px;
+    font-size: 8px;
+    line-height: 1;
+    letter-spacing: 0.04em;
     cursor: pointer;
     user-select: none;
     box-shadow: inset 0 0 0 1px rgba(17, 24, 39, 0.04);
