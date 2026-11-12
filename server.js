@@ -328,7 +328,7 @@ cron.schedule('0 0 * * *', async () => {
     }
 }, {
     scheduled: true,
-    timezone: "America/New_Toronto"
+    timezone: "EST"
 });
 
 const PORT = process.env.PORT || 3000;
