@@ -7,22 +7,23 @@
 </head>
 <body>
     <div id="game-container">
-        <h2>Logged in as: <span id="user-name">Guest</span></h2>
+        <div class="game-layout">
+            <div class="board-shell">
+                <div id="board-top-labels" class="board-top-labels"></div>
+                <div id="board-side-labels" class="board-side-labels"></div>
 
-        <div class="board-shell">
-            <div id="board-top-labels" class="board-top-labels"></div>
-            <div id="board-side-labels" class="board-side-labels"></div>
-
-            <div class="board-inner">
-                <div id="grid-board" class="grid-20"></div>
+                <div class="board-inner">
+                    <div id="grid-board" class="grid-20"></div>
+                </div>
             </div>
-        </div>
 
-        <div class="command-panel">
-            <div class="command-panel-header">
-                <h3>Command Panel</h3>
-                <span class="ap-badge">AP <span id="stat-ap">0</span></span>
-            </div>
+            <div class="command-panel">
+                <div class="command-panel-header">
+                    <h3>Command Panel</h3>
+                    <span class="ap-badge">AP <span id="stat-ap">0</span></span>
+                </div>
+
+                <div class="user-pill">Logged in as: <span id="user-name">Guest</span></div>
 
             <div class="status-grid">
                 <div class="stat-card stat-health">
@@ -70,7 +71,8 @@
                 </button>
             </div>
 
-            <p id="action-instruction">Select an action, then click a tile.</p>
+                <p id="action-instruction">Select an action, then click a tile.</p>
+            </div>
         </div>
     </div>
 
