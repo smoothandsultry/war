@@ -183,43 +183,6 @@ io.on("connection", (socket) => {
             console.error("Error in player-join:", err);
         }
     });
-        try {
-            let tank = await Tank.findOne({ name: data.name });
-    
-            if (tank) {
-                if (tank.eliminated) {
-                    console.log(`Commander ${data.name} attempted to join, but is already eliminated.`);
-                    socket.emit("eliminated", { message: "Your tank was destroyed! You cannot respawn until a new match begins." });
-                    return;
-                }
-                tank.id = socket.id;
-                await tank.save();
-                console.log(`Commander ${data.name} reconnected at (${tank.x}, ${tank.y}) with ${tank.hearts} hearts.`);
-            } else {
-                const randomX = Math.floor(Math.random() * 20);
-                const randomY = Math.floor(Math.random() * 20);
-    
-                tank = new Tank({
-                    id: socket.id,
-                    discordId: data.discordId,
-                    name: data.name,
-                    color: userColors[data.name] || userColors["default"],
-                    x: randomX,
-                    y: randomY,
-                    hearts: 3,
-                    ap: 10,
-                    range: 2
-                });
-    
-                await tank.save();
-                console.log(`New tank created for ${data.name}:`, tank);
-            }
-    
-            sendUpdatedBoard();
-        } catch (err) {
-            console.error("Error in player-join:", err);
-        }
-    });
 
     socket.on("player-action", async (data) => {
         try {
@@ -345,7 +308,6 @@ app.use((err, req, res, next) => {
     console.error("Server Error:", err);
     res.status(500).send(`<h1>Server Error</h1><p>${err.message}</p><a href='/'>Return Home</a>`);
 });
-
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
