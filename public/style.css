@@ -393,7 +393,7 @@ body {
 .cell {
     background-color: var(--cell-base);
     border: none;
-    border-radius: 10px;
+    border-radius: 0;
     color: #222222;
     display: flex;
     justify-content: center;
