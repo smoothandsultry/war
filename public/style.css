@@ -108,12 +108,13 @@ body {
     grid-column: 2;
     grid-row: 1;
     display: grid;
-    grid-template-columns: repeat(21, calc(var(--board-cell-size) - 2px));
-    gap: 2px;
-    width: calc(var(--board-grid-width) + 26px);
+    grid-template-columns: repeat(21, var(--board-cell-size));
+    gap: var(--board-gap);
+    width: calc((21 * var(--board-cell-size)) + (20 * var(--board-gap)));
     justify-items: center;
     align-items: center;
     box-sizing: border-box;
+    margin-left: -4px;
     overflow: visible;
 }
 
