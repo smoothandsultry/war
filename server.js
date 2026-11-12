@@ -139,12 +139,16 @@ function getCircularDistance(a, b) {
     return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 }
 
-function formatDiscordDate(date = new Date()) {
+function formatDiscordDateTime(date = new Date()) {
     return new Intl.DateTimeFormat('en-US', {
         timeZone: 'America/New_York',
         month: 'short',
         day: 'numeric',
-        year: 'numeric'
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
     }).format(date);
 }
 
@@ -178,7 +182,7 @@ async function sendDiscordActionWebhook(action, tank, details = {}) {
         description: style.description,
         color: style.color,
         footer: {
-            text: `${style.footer} • ${formatDiscordDate()}`
+            text: `${style.footer} • ${formatDiscordDateTime()}`
         }
     };
 
@@ -212,7 +216,7 @@ io.on("connection", (socket) => {
             if (tank) {
                 if (tank.eliminated) {
                     console.log(`Commander ${data.name} attempted to join, but is already eliminated.`);
-                    socket.emit("eliminated", { message: "Your tank was destroyed! You cannot respawn until a new match begins." });
+                    socket.emit("eliminated", { message: "you're dead" });
                     return;
                 }
                 tank.id = socket.id;
@@ -433,10 +437,10 @@ cron.schedule('0 0 * * *', async () => {
                 content: "@everyone AP reset has arrived! Everyone has received their daily AP.",
                 embeds: [{
                     title: "Daily AP Reset",
-                    description: "The 12:00 AM EST AP refresh has fired for all active tanks.",
+                    description: "Everybody has been given their daily AP.",
                     color: 5763719,
                     footer: {
-                        text: `Date: ${formatDiscordDate()}`
+                        text: `Date/Time: ${formatDiscordDateTime()}`
                     }
                 }]
             }, {
@@ -444,7 +448,7 @@ cron.schedule('0 0 * * *', async () => {
             });
         }
 
-        console.log("Daily AP granted successfully to all active tanks.");
+        console.log("Daily AP granted successfully to all active users.");
     } catch (err) {
         console.error("Error running daily AP cron job:", err);
     }
