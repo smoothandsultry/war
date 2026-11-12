@@ -63,6 +63,81 @@ function getReadableTextColor(hexColor) {
     return luminance > 0.65 ? "#111111" : "#ffffff";
 }
 
+function getTimeOfDayPalette() {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 10) {
+        return {
+            pageBgTop: "#eaf5ff",
+            pageBgBottom: "#d5e6ff",
+            boardBg: "rgba(255, 255, 255, 0.34)",
+            gridGlow: "rgba(108, 147, 255, 0.16)",
+            cellBase: "#eaf0fb",
+            cellHover: "#d9e8ff",
+            labelColor: "#4d627e"
+        };
+    }
+
+    if (hour >= 10 && hour < 16) {
+        return {
+            pageBgTop: "#dff7ff",
+            pageBgBottom: "#cfe8ff",
+            boardBg: "rgba(255, 255, 255, 0.28)",
+            gridGlow: "rgba(65, 136, 203, 0.18)",
+            cellBase: "#edf6ff",
+            cellHover: "#dfeeff",
+            labelColor: "#39607b"
+        };
+    }
+
+    if (hour >= 16 && hour < 20) {
+        return {
+            pageBgTop: "#fce6c6",
+            pageBgBottom: "#f0b98a",
+            boardBg: "rgba(255, 240, 219, 0.38)",
+            gridGlow: "rgba(166, 101, 52, 0.2)",
+            cellBase: "#f8e5d1",
+            cellHover: "#f1cfac",
+            labelColor: "#6d4d35"
+        };
+    }
+
+    if (hour >= 20 && hour < 23) {
+        return {
+            pageBgTop: "#1e2b52",
+            pageBgBottom: "#0c132f",
+            boardBg: "rgba(25, 39, 72, 0.7)",
+            gridGlow: "rgba(163, 182, 255, 0.2)",
+            cellBase: "#313f68",
+            cellHover: "#45598a",
+            labelColor: "#d9e6ff"
+        };
+    }
+
+    return {
+        pageBgTop: "#0a1021",
+        pageBgBottom: "#050b16",
+        boardBg: "rgba(12, 20, 35, 0.8)",
+        gridGlow: "rgba(120, 154, 255, 0.22)",
+        cellBase: "#1b2945",
+        cellHover: "#273d63",
+        labelColor: "#dfeaff"
+    };
+}
+
+function applyTimeOfDayTheme() {
+    const palette = getTimeOfDayPalette();
+    const root = document.documentElement;
+
+    root.style.setProperty("--page-bg-top", palette.pageBgTop);
+    root.style.setProperty("--page-bg-bottom", palette.pageBgBottom);
+    root.style.setProperty("--board-bg", palette.boardBg);
+    root.style.setProperty("--grid-glow", palette.gridGlow);
+    root.style.setProperty("--cell-base", palette.cellBase);
+    root.style.setProperty("--cell-hover", palette.cellHover);
+    root.style.setProperty("--label-color", palette.labelColor);
+}
+
 function renderBoardRuler() {
     const topLabels = document.getElementById("board-top-labels");
     const sideLabels = document.getElementById("board-side-labels");
@@ -83,6 +158,9 @@ function renderBoardRuler() {
         sideLabels.appendChild(label);
     }
 }
+
+applyTimeOfDayTheme();
+setInterval(applyTimeOfDayTheme, 60000);
 
 function joinGame() {
     const input = document.getElementById("username-input");
