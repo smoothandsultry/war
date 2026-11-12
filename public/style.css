@@ -33,7 +33,11 @@
     margin: 0;
     padding: 0;
     font-family: 'Redaction 50', serif;
-    font-size: 12px;
+    font-size: inherit;
+}
+
+html {
+    font-size: 16px;
 }
 
 body {
@@ -45,7 +49,7 @@ body {
     align-items: center;
     justify-content: center;
     transition: background 0.6s ease;
-    font-size: 12px;
+    font-size: 1rem;
 }
 
 #login-screen {
