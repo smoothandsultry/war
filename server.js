@@ -120,9 +120,9 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 function getActionCost(action) {
     switch (action) {
         case "MOVE": return 1;
-        case "SHOOT": return 2;
+        case "SHOOT": return 1;
         case "UPGRADE": return 3;
-        case "GIFT": return 2;
+        case "GIFT": return 1;
         default: return 1;
     }
 }
@@ -171,7 +171,7 @@ io.on("connection", (socket) => {
                     x: randomX,
                     y: randomY,
                     hearts: 3,
-                    ap: 10,
+                    ap: 0,
                     range: 2
                 });
     
