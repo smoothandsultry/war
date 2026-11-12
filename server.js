@@ -33,6 +33,7 @@ const tankSchema = new mongoose.Schema({
     hearts: { type: Number, default: 3 },
     ap: { type: Number, default: 0 },
     range: { type: Number, default: 2 },
+    giftsGiven: { type: Number, default: 0 },
     eliminated: { type: Boolean, default: false }
 });
 
@@ -240,6 +241,7 @@ io.on("connection", (socket) => {
                 }
 
                 tank.ap -= actionCost;
+                tank.giftsGiven = (tank.giftsGiven || 0) + 1;
                 target.ap += 1;
                 await tank.save();
                 await target.save();
