@@ -86,6 +86,14 @@ body {
 }
 
 .board-shell {
+    --board-cell-size: 32px;
+    --board-gap: 4px;
+    --board-padding: 8px;
+    --board-grid-width: calc((20 * var(--board-cell-size)) + (19 * var(--board-gap)));
+    --board-grid-height: calc((20 * var(--board-cell-size)) + (19 * var(--board-gap)));
+    --board-backdrop-width: calc(var(--board-grid-width) + (2 * var(--board-padding)));
+    --board-backdrop-height: calc(var(--board-grid-height) + (2 * var(--board-padding)));
+    --board-ruler-offset: var(--board-padding);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -95,19 +103,21 @@ body {
 
 .board-top-labels {
     display: grid;
-    grid-template-columns: repeat(20, 32px);
-    gap: 2px;
-    width: calc((20 * 32px) + (19 * 2px));
-    margin-left: 28px;
-    margin-bottom: 6px;
+    grid-template-columns: repeat(20, var(--board-cell-size));
+    gap: var(--board-gap);
+    width: var(--board-grid-width);
+    margin: 0 0 6px var(--board-ruler-offset);
+    padding: 0;
     justify-items: center;
     align-items: center;
+    box-sizing: border-box;
 }
 
 .board-inner {
     display: flex;
     align-items: flex-start;
     justify-content: center;
+    gap: 0;
 }
 
 .board-top-labels span,
@@ -126,17 +136,21 @@ body {
 
 .board-side-labels {
     display: grid;
-    grid-template-rows: repeat(20, 32px);
-    gap: 2px;
-    width: 28px;
-    margin-right: 8px;
+    grid-template-rows: repeat(20, var(--board-cell-size));
+    gap: var(--board-gap);
+    width: 32px;
+    height: var(--board-grid-height);
+    margin: 0 8px 0 0;
+    padding-top: var(--board-ruler-offset);
     align-items: center;
     justify-items: center;
+    box-sizing: border-box;
 }
 
 .grid-20 {
     --cell-size: 32px;
     --gap: 4px;
+    --board-padding: 8px;
     display: grid;
     grid-template-columns: repeat(20, var(--cell-size));
     grid-template-rows: repeat(20, var(--cell-size));
@@ -145,10 +159,12 @@ body {
     border: none;
     border-radius: 18px;
     box-shadow: 0 18px 36px var(--grid-glow), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-    width: calc((20 * var(--cell-size)) + (19 * var(--gap)) + 4px);
+    width: var(--board-backdrop-width);
+    height: var(--board-backdrop-height);
     max-width: 100%;
-    margin: 0 auto;
-    padding: 8px;
+    margin: 0;
+    padding: var(--board-padding);
+    box-sizing: border-box;
     transition: background 0.6s ease, box-shadow 0.6s ease;
 }
 
