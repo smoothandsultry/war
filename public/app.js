@@ -146,13 +146,13 @@ function renderBoardRuler() {
     topLabels.innerHTML = "";
     sideLabels.innerHTML = "";
 
-    for (let i = 1; i <= GRID_SIZE; i++) {
+    for (let i = 0; i < GRID_SIZE; i++) {
         const label = document.createElement("span");
         label.textContent = String(i);
         topLabels.appendChild(label);
     }
 
-    for (let i = 1; i <= GRID_SIZE; i++) {
+    for (let i = 0; i < GRID_SIZE; i++) {
         const label = document.createElement("span");
         label.textContent = String(i);
         sideLabels.appendChild(label);
