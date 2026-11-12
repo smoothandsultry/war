@@ -40,7 +40,7 @@ const Tank = mongoose.model("Tank", tankSchema);
 
 // Predefined user colors map
 const userColors = {
-    "smoothandsultry": "#ff5733",
+    "smoothandsultry": "#941b00",
     "default": "#ffffff"
 };
 
@@ -160,8 +160,23 @@ io.on("connection", (socket) => {
                 await tank.save();
                 console.log(`Commander ${data.name} reconnected at (${tank.x}, ${tank.y}) with ${tank.hearts} hearts.`);
             } else {
-                const randomX = Math.floor(Math.random() * 20);
-                const randomY = Math.floor(Math.random() * 20);
+                let randomX = Math.floor(Math.random() * 20);
+                let randomY = Math.floor(Math.random() * 20);
+                let tries = 0;
+
+                while (tries < 400) {
+                    const occupied = await Tank.exists({
+                        x: randomX,
+                        y: randomY,
+                        eliminated: false
+                    });
+
+                    if (!occupied) break;
+
+                    randomX = Math.floor(Math.random() * 20);
+                    randomY = Math.floor(Math.random() * 20);
+                    tries += 1;
+                }
     
                 tank = new Tank({
                     id: socket.id,
@@ -200,6 +215,18 @@ io.on("connection", (socket) => {
                 const distance = getDistance(tank, data.target);
                 if (distance !== 1) {
                     console.log(`Move invalid: ${data.name} tried to move ${distance} spaces away`);
+                    return;
+                }
+
+                const occupiedTarget = await Tank.exists({
+                    x: data.target.x,
+                    y: data.target.y,
+                    eliminated: false,
+                    name: { $ne: tank.name }
+                });
+
+                if (occupiedTarget) {
+                    console.log(`Move invalid: ${data.name} tried to move onto occupied cell (${data.target.x}, ${data.target.y})`);
                     return;
                 }
 

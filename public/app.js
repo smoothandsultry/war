@@ -6,13 +6,17 @@ let playerName = "";
 let playerColor = DEFAULT_TANK_COLOR;
 let currentGameState = { tanks: [] };
 
+function isCellOccupied(x, y, ignoreName = null) {
+    return currentGameState.tanks.some((tank) => !tank.eliminated && tank.x === x && tank.y === y && tank.name !== ignoreName);
+}
+
 function getValidMoveCells(currentTank) {
     if (!currentTank) return [];
     const cells = [];
     for (let y = 0; y < GRID_SIZE; y++) {
         for (let x = 0; x < GRID_SIZE; x++) {
             const distance = Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y));
-            if (distance === 1) {
+            if (distance === 1 && !isCellOccupied(x, y, currentTank.name)) {
                 cells.push({ x, y });
             }
         }
@@ -217,35 +221,6 @@ function selectAction(actionType) {
 function handleCellClick(x, y) {
     const currentTank = getCurrentTank();
     if (!selectedAction) return alert("Select an action first.");
-
-    if (selectedAction === "UPGRADE") {
-        selectedAction = null;
-        document.getElementById("action-instruction").textContent = "Select an action, then click a tile.";
-        return;
-    }
-    
-    const distance = currentTank ? Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y)) : 1;
-
-    if (selectedAction === "MOVE" && distance !== 1) {
-        alert("Move only works 1 space away.");
-        return;
-    }
-
-    if (["SHOOT", "GIFT"].includes(selectedAction) && distance > (currentTank?.range || 2)) {
-        alert("That target is out of range.");
-        return;
-    }
-
-    socket.emit("player-action", { name: playerName, action: selectedAction, target: { x, y } });
-
-    selectedAction = null;
-    buildGrid();
-    document.getElementById("action-instruction").textContent = "Select an action, then click a tile.";
-}
-
-function handleCellClick(x, y) {
-    const currentTank = getCurrentTank();
-    if (!selectedAction) return alert("Select an action first.");
     if (!currentTank || currentTank.ap <= 0) {
         alert("You have no AP left. You cannot use actions.");
         return;
@@ -257,11 +232,18 @@ function handleCellClick(x, y) {
         return;
     }
     
-    const distance = Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y));
+    const distance = currentTank ? Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y)) : 1;
 
-    if (selectedAction === "MOVE" && distance !== 1) {
-        alert("Move only works 1 space away.");
-        return;
+    if (selectedAction === "MOVE") {
+        if (distance !== 1) {
+            alert("Move only works 1 space away.");
+            return;
+        }
+
+        if (isCellOccupied(x, y, currentTank.name)) {
+            alert("You cannot move onto an occupied cell.");
+            return;
+        }
     }
 
     if (["SHOOT", "GIFT"].includes(selectedAction) && distance > (currentTank.range || 2)) {
