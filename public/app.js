@@ -5,6 +5,7 @@ let selectedAction = null;
 let playerName = "";
 let playerColor = DEFAULT_TANK_COLOR;
 let currentGameState = { tanks: [] };
+let previousTankPositions = new Map();
 
 function isCellOccupied(x, y, ignoreName = null) {
     const occupied = currentGameState.tanks.find((tank) => !tank.eliminated && tank.x === x && tank.y === y && tank.name !== ignoreName);
@@ -142,6 +143,21 @@ function buildGrid() {
     const board = document.getElementById("grid-board");
     board.innerHTML = "";
 
+    const movedCells = new Set();
+    const currentPositions = new Map();
+
+    currentGameState.tanks.forEach((tank) => {
+        const positionKey = `${tank.x},${tank.y}`;
+        currentPositions.set(tank.name, { x: tank.x, y: tank.y });
+
+        const previousPosition = previousTankPositions.get(tank.name);
+        if (previousPosition && (previousPosition.x !== tank.x || previousPosition.y !== tank.y)) {
+            movedCells.add(positionKey);
+        }
+    });
+
+    previousTankPositions = currentPositions;
+
     const currentTank = getCurrentTank();
     
     const validCells = selectedAction === "MOVE"
@@ -168,6 +184,9 @@ function buildGrid() {
             if (occupant) {
                 const tankColor = occupant.color || DEFAULT_TANK_COLOR;
                 cell.classList.add("has-tank");
+                if (movedCells.has(`${x},${y}`)) {
+                    cell.classList.add("tank-moved");
+                }
                 cell.textContent = occupant.name.substring(0, 3).toUpperCase();
                 cell.title = occupant.name;
                 cell.style.backgroundColor = tankColor;
