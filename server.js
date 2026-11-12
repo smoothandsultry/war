@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const crypto = require('crypto');
 const cron = require('node-cron');
+const axios = require('axios');
 
 if (!global.crypto) {
     global.crypto = crypto;
@@ -33,6 +34,9 @@ const tankSchema = new mongoose.Schema({
     hearts: { type: Number, default: 3 },
     ap: { type: Number, default: 0 },
     range: { type: Number, default: 2 },
+    damageDealt: { type: Number, default: 0 },
+    tilesMoved: { type: Number, default: 0 },
+    playerKills: { type: Number, default: 0 },
     eliminated: { type: Boolean, default: false }
 });
 
@@ -135,6 +139,70 @@ function getCircularDistance(a, b) {
     return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 }
 
+async function sendDiscordActionWebhook(action, tank, details = {}) {
+    const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+    if (!webhookUrl || !tank) return;
+
+    if (!['MOVE', 'SHOOT'].includes(action)) {
+        return;
+    }
+
+    const actionStyles = {
+        MOVE: {
+            color: 5763719,
+            title: "Movement",
+            description: `${tank.name} repositioned to (${tank.x}, ${tank.y}).`,
+            footer: "Tiles moved"
+        },
+        SHOOT: {
+            color: 15548997,
+            title: "Attack",
+            description: details.result || `${tank.name} fired on the target.`,
+            footer: "Damage dealt"
+        }
+    };
+
+    const style = actionStyles[action];
+
+    const embed = {
+        title: `${style.title}: ${tank.name}`,
+        description: style.description,
+        color: style.color,
+        fields: [],
+        footer: {
+            text: style.footer
+        },
+        timestamp: new Date().toISOString()
+    };
+
+    if (details.target) {
+        embed.fields.push({
+            name: "Target",
+            value: `(${details.target.x}, ${details.target.y})`,
+            inline: true
+        });
+    }
+
+    if (details.result) {
+        embed.fields.push({
+            name: "Result",
+            value: details.result,
+            inline: false
+        });
+    }
+
+    try {
+        await axios.post(webhookUrl, {
+            username: "war",
+            embeds: [embed]
+        }, {
+            headers: { "Content-Type": "application/json" }
+        });
+    } catch (err) {
+        console.error("Discord webhook error:", err.response ? err.response.data : err.message);
+    }
+}
+
 io.on("connection", (socket) => {
     console.log(`A user connected: ${socket.id}`);
 
@@ -187,7 +255,10 @@ io.on("connection", (socket) => {
                     y: randomY,
                     hearts: 3,
                     ap: 0,
-                    range: 2
+                    range: 2,
+                    damageDealt: 0,
+                    tilesMoved: 0,
+                    playerKills: 0
                 });
     
                 await tank.save();
@@ -231,8 +302,13 @@ io.on("connection", (socket) => {
 
                 tank.x = data.target.x;
                 tank.y = data.target.y;
+                tank.tilesMoved = (tank.tilesMoved || 0) + 1;
                 tank.ap -= actionCost;
                 await tank.save();
+                await sendDiscordActionWebhook("MOVE", tank, {
+                    target: { x: tank.x, y: tank.y },
+                    result: "Moved successfully"
+                });
                 await sendUpdatedBoard();
                 return;
             }
@@ -242,6 +318,9 @@ io.on("connection", (socket) => {
                 tank.ap -= actionCost;
                 await tank.save();
                 console.log(`Commander ${tank.name} upgraded range to ${tank.range}`);
+                await sendDiscordActionWebhook("UPGRADE", tank, {
+                    result: `Range increased to ${tank.range}`
+                });
                 await sendUpdatedBoard();
                 return;
             }
@@ -294,16 +373,24 @@ io.on("connection", (socket) => {
                 }
 
                 tank.ap -= actionCost;
+                tank.damageDealt = (tank.damageDealt || 0) + 1;
                 target.hearts -= 1;
                 console.log(`Commander ${tank.name} shot ${target.name} for 1 damage`);
 
                 if (target.hearts <= 0) {
                     console.log(`Commander ${target.name} was eliminated`);
                     target.eliminated = true;
+                    tank.playerKills = (tank.playerKills || 0) + 1;
                 }
 
                 await tank.save();
                 await target.save();
+                await sendDiscordActionWebhook("SHOOT", tank, {
+                    target: { x: target.x, y: target.y },
+                    result: target.hearts <= 0
+                        ? `${target.name} was eliminated`
+                        : `${target.name} took 1 damage`
+                });
                 await sendUpdatedBoard();
             }
         } catch (err) {
@@ -338,8 +425,8 @@ app.use((err, req, res, next) => {
 
 cron.schedule('0 0 * * *', async () => {
     try {
-        console.log("Running daily AP regeneration task (12:00 AM)...");
-        
+        console.log("Running daily AP regeneration task (12:00 AM EST)...");
+
         await Tank.updateMany(
             { eliminated: false },
             { $inc: { ap: 1 } }
@@ -347,7 +434,23 @@ cron.schedule('0 0 * * *', async () => {
 
         const activeTanks = await Tank.find({ eliminated: false });
         io.emit("update-board", { tanks: activeTanks });
-        
+
+        const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+        if (webhookUrl) {
+            await axios.post(webhookUrl, {
+                username: "war",
+                content: "@everyone AP reset has arrived! Everyone has received their daily AP.",
+                embeds: [{
+                    title: "Daily AP Reset",
+                    description: "The 12:00 AM EST AP refresh has fired for all active tanks.",
+                    color: 5763719,
+                    timestamp: new Date().toISOString()
+                }]
+            }, {
+                headers: { "Content-Type": "application/json" }
+            });
+        }
+
         console.log("Daily AP granted successfully to all active tanks.");
     } catch (err) {
         console.error("Error running daily AP cron job:", err);

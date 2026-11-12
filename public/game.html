@@ -57,13 +57,13 @@
 
         // Listen for board updates and render your tank's stats
         socket.on('update-board', (data) => {
-            if (!currentUsername || !data.tanks) return;
-            
-            const myTank = data.tanks.find(t => t.name === currentUsername);
+            if (!data.tanks) return;
+
+            const myTank = data.tanks.find(t => t.name === playerName);
             if (myTank) {
                 document.getElementById('stat-hearts').innerText = myTank.hearts;
                 document.getElementById('stat-ap').innerText = myTank.ap;
-                document.getElementById('stat-range').innerText = myTank.range;
+                document.getElementById('stat-range').innerText = myTank.range || 2;
             }
         });
     </script>
