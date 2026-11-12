@@ -41,7 +41,7 @@ const Tank = mongoose.model("Tank", tankSchema);
 // Predefined user colors map
 const userColors = {
     "smoothandsultry": "#ff5733",
-    "default": "#33ff57"
+    "default": "#ffffff"
 };
 
 // Express Session Configuration
