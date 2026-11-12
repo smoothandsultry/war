@@ -139,6 +139,15 @@ function getCircularDistance(a, b) {
     return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 }
 
+function formatDiscordDate(date = new Date()) {
+    return new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/New_York',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    }).format(date);
+}
+
 async function sendDiscordActionWebhook(action, tank, details = {}) {
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
     if (!webhookUrl || !tank) return;
@@ -169,9 +178,8 @@ async function sendDiscordActionWebhook(action, tank, details = {}) {
         description: style.description,
         color: style.color,
         footer: {
-            text: style.footer
-        },
-        timestamp: new Date().toISOString()
+            text: `${style.footer} • ${formatDiscordDate()}`
+        }
     };
 
     try {
@@ -427,7 +435,9 @@ cron.schedule('0 0 * * *', async () => {
                     title: "Daily AP Reset",
                     description: "The 12:00 AM EST AP refresh has fired for all active tanks.",
                     color: 5763719,
-                    timestamp: new Date().toISOString()
+                    footer: {
+                        text: `Date: ${formatDiscordDate()}`
+                    }
                 }]
             }, {
                 headers: { "Content-Type": "application/json" }
