@@ -160,7 +160,7 @@ body {
 }
 
 .cell.tank-moved {
-    animation: tank-slide 0.6s cubic-bezier(0.16, 0.84, 0.22, 1);
+    animation: tank-bounce 0.42s ease;
 }
 
 .cell.valid-target {
@@ -172,17 +172,17 @@ body {
     box-shadow: inset 0 0 0 3px #d3af38, 0 0 8px rgba(56, 211, 159, 0.7);
 }
 
-@keyframes tank-slide {
+@keyframes tank-bounce {
     0% {
-        transform: translate(var(--slide-x, 0px), var(--slide-y, 0px)) scale(0.96);
-        opacity: 0.65;
+        transform: translate(var(--bounce-x, 0px), var(--bounce-y, 0px)) scale(0.9);
+        box-shadow: 0 0 0 rgba(14, 55, 168, 0);
     }
     40% {
-        transform: translate(calc(var(--slide-x, 0px) * 0.4), calc(var(--slide-y, 0px) * 0.4)) scale(1.01);
-        opacity: 0.88;
+        transform: translate(calc(var(--bounce-x, 0px) * -0.1), calc(var(--bounce-y, 0px) * -0.1)) scale(1.08);
+        box-shadow: 0 0 12px rgba(14, 55, 168, 0.35);
     }
     100% {
         transform: translate(0, 0) scale(1);
-        opacity: 1;
+        box-shadow: 0 0 0 rgba(14, 55, 168, 0);
     }
 }
