@@ -139,23 +139,20 @@ function applyTimeOfDayTheme() {
 }
 
 function renderBoardRuler() {
-    const topLabels = document.getElementById("board-top-labels");
-    const sideLabels = document.getElementById("board-side-labels");
-    if (!topLabels || !sideLabels) return;
+    const topLabels = document.getElementById('board-top-labels');
+    const sideLabels = document.getElementById('board-side-labels');
+    
+    topLabels.innerHTML = '';
+    sideLabels.innerHTML = '';
 
-    topLabels.innerHTML = "";
-    sideLabels.innerHTML = "";
+    for (let i = 1; i <= 20; i++) {
+        const topSpan = document.createElement('span');
+        topSpan.textContent = i;
+        topLabels.appendChild(topSpan);
 
-    for (let i = 0; i <= GRID_SIZE; i++) {
-        const label = document.createElement("span");
-        label.textContent = String(i);
-        topLabels.appendChild(label);
-    }
-
-    for (let i = 1; i <= GRID_SIZE; i++) {
-        const label = document.createElement("span");
-        label.textContent = String(i);
-        sideLabels.appendChild(label);
+        const sideSpan = document.createElement('span');
+        sideSpan.textContent = i;
+        sideLabels.appendChild(sideSpan);
     }
 }
 
