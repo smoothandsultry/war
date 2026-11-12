@@ -7,7 +7,8 @@ let playerColor = DEFAULT_TANK_COLOR;
 let currentGameState = { tanks: [] };
 
 function isCellOccupied(x, y, ignoreName = null) {
-    return currentGameState.tanks.some((tank) => !tank.eliminated && tank.x === x && tank.y === y && tank.name !== ignoreName);
+    const occupied = currentGameState.tanks.find((tank) => !tank.eliminated && tank.x === x && tank.y === y && tank.name !== ignoreName);
+    return Boolean(occupied);
 }
 
 function getValidMoveCells(currentTank) {
@@ -109,13 +110,14 @@ function updateStatusUI() {
     const apEl = document.getElementById("stat-ap");
     const rangeEl = document.getElementById("stat-range");
 
-    const currentAp = currentTank ? currentTank.ap : 10;
+    const isEliminated = !currentTank;
+    const currentAp = currentTank ? currentTank.ap : 0;
 
-    if (heartsEl) heartsEl.textContent = currentTank ? currentTank.hearts : 3;
+    if (heartsEl) heartsEl.textContent = currentTank ? currentTank.hearts : 0;
     if (apEl) apEl.textContent = currentAp;
-    if (rangeEl) rangeEl.textContent = currentTank ? (currentTank.range || 2) : 2;
+    if (rangeEl) rangeEl.textContent = currentTank ? (currentTank.range || 2) : 0;
 
-    const isOutOfAp = currentTank && currentTank.ap <= 0;
+    const isOutOfAp = isEliminated || (currentTank && currentTank.ap <= 0);
 
     document.querySelectorAll("button[onclick^='selectAction'], .action-panel button").forEach((button) => {
         if (isOutOfAp) {

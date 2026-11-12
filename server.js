@@ -165,13 +165,13 @@ io.on("connection", (socket) => {
                 let tries = 0;
 
                 while (tries < 400) {
-                    const occupied = await Tank.exists({
+                    const occupiedTank = await Tank.findOne({
                         x: randomX,
                         y: randomY,
                         eliminated: false
                     });
 
-                    if (!occupied) break;
+                    if (!occupiedTank) break;
 
                     randomX = Math.floor(Math.random() * 20);
                     randomY = Math.floor(Math.random() * 20);
@@ -218,14 +218,13 @@ io.on("connection", (socket) => {
                     return;
                 }
 
-                const occupiedTarget = await Tank.exists({
+                const occupiedTarget = await Tank.findOne({
                     x: data.target.x,
                     y: data.target.y,
-                    eliminated: false,
-                    name: { $ne: tank.name }
+                    eliminated: false
                 });
 
-                if (occupiedTarget) {
+                if (occupiedTarget && occupiedTarget.name !== tank.name) {
                     console.log(`Move invalid: ${data.name} tried to move onto occupied cell (${data.target.x}, ${data.target.y})`);
                     return;
                 }
