@@ -146,17 +146,43 @@ io.on("connection", (socket) => {
     sendUpdatedBoard();
 
     socket.on("player-join", async (data) => {
-        socket.on('update-board', (data) => {
-    if (!currentUsername || !data.tanks) return;
-        console.log("Tank after creation or update:", tank);
-    const myTank = data.tanks.find(t => t.name === currentUsername);
-    if (myTank) {
-        document.getElementById('stat-hearts').innerText = myTank.hearts;
-        document.getElementById('stat-ap').innerText = myTank.ap;
-        document.getElementById('stat-range').innerText = myTank.range;
-    }
-    console.log("Game state sent to clients:", { tanks: activeTanks });
-});
+        try {
+            let tank = await Tank.findOne({ name: data.name });
+    
+            if (tank) {
+                if (tank.eliminated) {
+                    console.log(`Commander ${data.name} attempted to join, but is already eliminated.`);
+                    socket.emit("eliminated", { message: "Your tank was destroyed! You cannot respawn until a new match begins." });
+                    return;
+                }
+                tank.id = socket.id;
+                await tank.save();
+                console.log(`Commander ${data.name} reconnected at (${tank.x}, ${tank.y}) with ${tank.hearts} hearts.`);
+            } else {
+                const randomX = Math.floor(Math.random() * 20);
+                const randomY = Math.floor(Math.random() * 20);
+    
+                tank = new Tank({
+                    id: socket.id,
+                    discordId: data.discordId,
+                    name: data.name,
+                    color: userColors[data.name] || userColors["default"],
+                    x: randomX,
+                    y: randomY,
+                    hearts: 3,
+                    ap: 10,
+                    range: 2
+                });
+    
+                await tank.save();
+                console.log(`New tank created for ${data.name}:`, tank);
+            }
+    
+            sendUpdatedBoard();
+        } catch (err) {
+            console.error("Error in player-join:", err);
+        }
+    });
         try {
             let tank = await Tank.findOne({ name: data.name });
     
