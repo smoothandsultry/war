@@ -129,7 +129,7 @@ function buildGrid() {
     const currentTank = getCurrentTank();
     const validCells = selectedAction === "MOVE"
         ? getValidMoveCells(currentTank)
-        : selectedAction && ["SHOOT", "HEAL", "GIFT"].includes(selectedAction)
+        : selectedAction && ["SHOOT", "GIFT"].includes(selectedAction)
             ? getValidTargetCells(currentTank, selectedAction)
             : [];
     const validCellSet = new Set(validCells.map(cell => `${cell.x},${cell.y}`));
@@ -170,16 +170,13 @@ function buildGrid() {
 
 function selectAction(actionType) {
     const currentTank = getCurrentTank();
-    if (!currentTank || currentTank.ap <= 0) {
-        alert("You have no AP left. You cannot use actions.");
-        return;
-    }
-
+    
+    // Allow action selection even if frontend AP state lags behind MongoDB
     if (actionType === "UPGRADE") {
         socket.emit("player-action", {
             name: playerName,
             action: actionType,
-            target: { x: currentTank.x, y: currentTank.y }
+            target: { x: currentTank ? currentTank.x : 0, y: currentTank ? currentTank.y : 0 }
         });
         selectedAction = null;
         buildGrid();
@@ -190,6 +187,35 @@ function selectAction(actionType) {
     selectedAction = actionType;
     buildGrid();
     document.getElementById("action-instruction").textContent = `Selected: ${selectedAction}. Click a grid cell.`;
+}
+
+function handleCellClick(x, y) {
+    const currentTank = getCurrentTank();
+    if (!selectedAction) return alert("Select an action first.");
+
+    if (selectedAction === "UPGRADE") {
+        selectedAction = null;
+        document.getElementById("action-instruction").textContent = "Select an action, then click a tile.";
+        return;
+    }
+    
+    const distance = currentTank ? Math.max(Math.abs(currentTank.x - x), Math.abs(currentTank.y - y)) : 1;
+
+    if (selectedAction === "MOVE" && distance !== 1) {
+        alert("Move only works 1 space away.");
+        return;
+    }
+
+    if (["SHOOT", "GIFT"].includes(selectedAction) && distance > (currentTank?.range || 2)) {
+        alert("That target is out of range.");
+        return;
+    }
+
+    socket.emit("player-action", { name: playerName, action: selectedAction, target: { x, y } });
+
+    selectedAction = null;
+    buildGrid();
+    document.getElementById("action-instruction").textContent = "Select an action, then click a tile.";
 }
 
 function handleCellClick(x, y) {
@@ -213,7 +239,7 @@ function handleCellClick(x, y) {
         return;
     }
 
-    if (["SHOOT", "HEAL", "GIFT"].includes(selectedAction) && distance > (currentTank.range || 2)) {
+    if (["SHOOT", "GIFT"].includes(selectedAction) && distance > (currentTank.range || 2)) {
         alert("That target is out of range.");
         return;
     }
