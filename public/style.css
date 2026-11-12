@@ -258,7 +258,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 4px 7px;
-    border-radius: 999px;
+    border-radius: 0;
     background: rgba(30, 42, 63, 0.06);
     font-size: 0.68rem;
     letter-spacing: 0.04em;
