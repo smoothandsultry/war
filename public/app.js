@@ -71,9 +71,9 @@ function renderBoardRuler() {
     topLabels.innerHTML = "";
     sideLabels.innerHTML = "";
 
-    for (let i = 0; i < GRID_SIZE; i++) {
+    for (let i = 1; i <= GRID_SIZE; i++) {
         const label = document.createElement("span");
-        label.textContent = String.fromCharCode(65 + i);
+        label.textContent = String(i);
         topLabels.appendChild(label);
     }
 

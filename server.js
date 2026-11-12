@@ -168,28 +168,11 @@ async function sendDiscordActionWebhook(action, tank, details = {}) {
         title: `${style.title}: ${tank.name}`,
         description: style.description,
         color: style.color,
-        fields: [],
         footer: {
             text: style.footer
         },
         timestamp: new Date().toISOString()
     };
-
-    if (details.target) {
-        embed.fields.push({
-            name: "Target",
-            value: `(${details.target.x}, ${details.target.y})`,
-            inline: true
-        });
-    }
-
-    if (details.result) {
-        embed.fields.push({
-            name: "Result",
-            value: details.result,
-            inline: false
-        });
-    }
 
     try {
         await axios.post(webhookUrl, {
