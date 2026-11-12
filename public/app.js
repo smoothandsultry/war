@@ -180,6 +180,34 @@ function getCurrentTank() {
     return currentGameState.tanks.find(t => t.name === playerName) || null;
 }
 
+function syncActionSelectionUI() {
+    document.querySelectorAll(".action-card").forEach((button) => {
+        const onclick = button.getAttribute("onclick") || "";
+        const match = onclick.match(/selectAction\('([^']+)'\)/);
+        const actionName = match ? match[1] : null;
+        button.classList.toggle("selected", Boolean(selectedAction) && actionName === selectedAction);
+    });
+}
+
+function renderHealthHearts(heartValue, maxHearts = 3) {
+    const heartsEl = document.getElementById("stat-hearts");
+    if (!heartsEl) return;
+
+    const safeValue = Math.max(0, Number(heartValue) || 0);
+    const safeMax = Math.max(1, Number(maxHearts) || 3);
+
+    const hearts = [];
+    for (let i = 0; i < safeMax; i++) {
+        const heart = document.createElement("span");
+        heart.textContent = "♥";
+        heart.classList.toggle("is-empty", i >= safeValue);
+        hearts.push(heart);
+    }
+
+    heartsEl.innerHTML = "";
+    hearts.forEach((heart) => heartsEl.appendChild(heart));
+}
+
 function updateStatusUI() {
     const currentTank = getCurrentTank();
     const heartsEl = document.getElementById("stat-hearts");
@@ -189,13 +217,15 @@ function updateStatusUI() {
     const isEliminated = !currentTank;
     const currentAp = currentTank ? currentTank.ap : 0;
 
-    if (heartsEl) heartsEl.textContent = currentTank ? currentTank.hearts : 0;
+    if (heartsEl) {
+        renderHealthHearts(currentTank ? currentTank.hearts : 0, 3);
+    }
     if (apEl) apEl.textContent = currentAp;
     if (rangeEl) rangeEl.textContent = currentTank ? (currentTank.range || 2) : 0;
 
     const isOutOfAp = isEliminated || (currentTank && currentTank.ap <= 0);
 
-    document.querySelectorAll("button[onclick^='selectAction'], .action-panel button").forEach((button) => {
+    document.querySelectorAll("button[onclick^='selectAction'], .action-card").forEach((button) => {
         if (isOutOfAp) {
             button.disabled = true;
             button.style.opacity = "0.5";
@@ -206,6 +236,8 @@ function updateStatusUI() {
             button.style.cursor = "pointer";
         }
     });
+
+    syncActionSelectionUI();
 }
 
 socket.on("update-board", (gameState) => {
@@ -290,6 +322,8 @@ function buildGrid() {
 
 function selectAction(actionType) {
     const currentTank = getCurrentTank();
+    selectedAction = actionType;
+    syncActionSelectionUI();
     
     const costs = {
         "MOVE": 1,
@@ -312,12 +346,12 @@ function selectAction(actionType) {
             target: { x: currentTank ? currentTank.x : 0, y: currentTank ? currentTank.y : 0 }
         });
         selectedAction = null;
+        syncActionSelectionUI();
         buildGrid();
         document.getElementById("action-instruction").textContent = "Upgrade used.";
         return;
     }
 
-    selectedAction = actionType;
     buildGrid();
     document.getElementById("action-instruction").textContent = `Selected: ${selectedAction}. Click a grid cell.`;
 }
@@ -332,6 +366,7 @@ function handleCellClick(x, y) {
 
     if (selectedAction === "UPGRADE") {
         selectedAction = null;
+        syncActionSelectionUI();
         document.getElementById("action-instruction").textContent = "Select an action, then click a tile.";
         return;
     }
@@ -358,6 +393,7 @@ function handleCellClick(x, y) {
     socket.emit("player-action", { name: playerName, action: selectedAction, target: { x, y } });
 
     selectedAction = null;
+    syncActionSelectionUI();
     buildGrid();
     document.getElementById("action-instruction").textContent = "Select an action, then click a tile.";
 }

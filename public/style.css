@@ -72,17 +72,192 @@ body {
     text-align: center;
 }
 
-.status-panel,
-.action-panel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-}
-
 #game-container button {
     display: block;
     margin: 0 auto;
+}
+
+.command-panel {
+    width: min(540px, calc(100vw - 32px));
+    background: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 18px;
+    box-shadow: 0 18px 38px rgba(81, 103, 163, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 18px 18px 14px;
+}
+
+.command-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding: 0 2px;
+}
+
+.command-panel-header h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    color: #182334;
+}
+
+.ap-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35em;
+    white-space: nowrap;
+    min-width: 64px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(214, 226, 255, 0.85);
+    border: 1px solid rgba(107, 125, 173, 0.18);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2d3c59;
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 72px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 0 0 1px rgba(143, 162, 204, 0.1);
+    padding: 8px 6px;
+}
+
+.stat-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #586b8e;
+    margin-bottom: 6px;
+}
+
+.stat-card strong {
+    font-size: 1.9rem;
+    line-height: 1;
+    color: #171d2d;
+    font-weight: 800;
+}
+
+.health-hearts {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.22em;
+    min-height: 2.3rem;
+    font-size: 1.8rem;
+    line-height: 1;
+    color: #d54d5b;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.health-hearts span {
+    display: inline-block;
+    transform: translateY(-1px);
+}
+
+.health-hearts span.is-empty {
+    opacity: 0.23;
+    filter: grayscale(1);
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.action-card {
+    width: 100%;
+    text-align: left;
+    border: 1px solid rgba(117, 141, 201, 0.18);
+    border-radius: 12px;
+    background: rgba(230, 237, 249, 0.9);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+    color: #1c273a;
+    padding: 12px 12px 10px;
+    cursor: pointer;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.action-card:hover {
+    transform: translateY(-1px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18), 0 8px 18px rgba(87, 110, 176, 0.08);
+}
+
+.action-card.selected {
+    background: rgba(202, 219, 255, 1);
+    border-color: rgba(85, 110, 184, 0.38);
+    box-shadow: inset 0 0 0 2px rgba(80, 103, 179, 0.3), 0 10px 20px rgba(91, 118, 205, 0.12);
+}
+
+.action-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-weight: 800;
+    font-size: 1.02rem;
+    margin-bottom: 6px;
+}
+
+.action-cost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 7px;
+    border-radius: 999px;
+    background: rgba(30, 42, 63, 0.06);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: #3d4a63;
+}
+
+.action-desc {
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: #475b7d;
+}
+
+#action-instruction {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(90, 107, 135, 0.12);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #475b7d;
+    text-align: center;
+}
+
+@media (max-width: 540px) {
+    .command-panel {
+        padding: 14px 12px 12px;
+    }
+
+    .status-grid {
+        gap: 8px;
+    }
+
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .board-shell {
