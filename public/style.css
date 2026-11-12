@@ -160,7 +160,7 @@ body {
 }
 
 .cell.tank-moved {
-    animation: tank-slide 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+    animation: tank-slide 0.6s cubic-bezier(0.16, 0.84, 0.22, 1);
 }
 
 .cell.valid-target {
@@ -174,12 +174,12 @@ body {
 
 @keyframes tank-slide {
     0% {
-        transform: translate(var(--slide-x, 0px), var(--slide-y, 0px)) scale(0.94);
-        opacity: 0.7;
+        transform: translate(var(--slide-x, 0px), var(--slide-y, 0px)) scale(0.96);
+        opacity: 0.65;
     }
-    35% {
-        transform: translate(calc(var(--slide-x, 0px) * 0.55), calc(var(--slide-y, 0px) * 0.55)) scale(1.02);
-        opacity: 0.9;
+    40% {
+        transform: translate(calc(var(--slide-x, 0px) * 0.4), calc(var(--slide-y, 0px) * 0.4)) scale(1.01);
+        opacity: 0.88;
     }
     100% {
         transform: translate(0, 0) scale(1);

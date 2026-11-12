@@ -192,8 +192,8 @@ function buildGrid() {
                 const moveDirection = movedCells.get(`${x},${y}`);
                 if (moveDirection) {
                     cell.classList.add("tank-moved");
-                    cell.style.setProperty("--slide-x", `${moveDirection.x * 18}px`);
-                    cell.style.setProperty("--slide-y", `${moveDirection.y * 18}px`);
+                    cell.style.setProperty("--slide-x", `${moveDirection.x * 12}px`);
+                    cell.style.setProperty("--slide-y", `${moveDirection.y * 12}px`);
                 }
                 cell.textContent = occupant.name.substring(0, 3).toUpperCase();
                 cell.title = occupant.name;
