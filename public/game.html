@@ -92,7 +92,6 @@
             })
             .catch(err => console.error("Failed to fetch user profile:", err));
 
-        // Listen for board updates and render your tank's stats
         socket.on('update-board', (data) => {
             if (!data.tanks) return;
 
