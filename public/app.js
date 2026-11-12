@@ -74,7 +74,12 @@ function getTimeOfDayPalette() {
             gridGlow: "rgba(108, 147, 255, 0.16)",
             cellBase: "#eaf0fb",
             cellHover: "#d9e8ff",
-            labelColor: "#4d627e"
+            labelColor: "#4d627e",
+            panelBg: "rgba(255, 255, 255, 0.22)",
+            panelBorder: "rgba(255, 255, 255, 0.28)",
+            panelInner: "rgba(227, 234, 250, 0.7)",
+            actionBg: "rgba(230, 237, 249, 0.9)",
+            actionSelected: "rgba(202, 219, 255, 1)"
         };
     }
 
@@ -86,7 +91,12 @@ function getTimeOfDayPalette() {
             gridGlow: "rgba(65, 136, 203, 0.18)",
             cellBase: "#edf6ff",
             cellHover: "#dfeeff",
-            labelColor: "#39607b"
+            labelColor: "#39607b",
+            panelBg: "rgba(255, 255, 255, 0.22)",
+            panelBorder: "rgba(255, 255, 255, 0.28)",
+            panelInner: "rgba(227, 234, 250, 0.7)",
+            actionBg: "rgba(230, 237, 249, 0.9)",
+            actionSelected: "rgba(202, 219, 255, 1)"
         };
     }
 
@@ -98,7 +108,12 @@ function getTimeOfDayPalette() {
             gridGlow: "rgba(166, 101, 52, 0.2)",
             cellBase: "#f8e5d1",
             cellHover: "#f1cfac",
-            labelColor: "#6d4d35"
+            labelColor: "#6d4d35",
+            panelBg: "rgba(245, 233, 214, 0.36)",
+            panelBorder: "rgba(146, 111, 74, 0.2)",
+            panelInner: "rgba(239, 224, 201, 0.72)",
+            actionBg: "rgba(240, 226, 204, 0.85)",
+            actionSelected: "rgba(222, 190, 129, 0.92)"
         };
     }
 
@@ -110,7 +125,12 @@ function getTimeOfDayPalette() {
             gridGlow: "rgba(163, 182, 255, 0.18)",
             cellBase: "#1a2942",
             cellHover: "#223a5a",
-            labelColor: "#d9e6ff"
+            labelColor: "#d9e6ff",
+            panelBg: "rgba(17, 24, 39, 0.72)",
+            panelBorder: "rgba(121, 139, 178, 0.42)",
+            panelInner: "rgba(29, 39, 59, 0.86)",
+            actionBg: "rgba(24, 35, 52, 0.9)",
+            actionSelected: "rgba(66, 89, 139, 0.9)"
         };
     }
 
@@ -121,7 +141,12 @@ function getTimeOfDayPalette() {
         gridGlow: "rgba(120, 154, 255, 0.18)",
         cellBase: "#18263e",
         cellHover: "#21385a",
-        labelColor: "#dfeaff"
+        labelColor: "#dfeaff",
+        panelBg: "rgba(13, 21, 37, 0.72)",
+        panelBorder: "rgba(127, 147, 189, 0.36)",
+        panelInner: "rgba(20, 30, 47, 0.88)",
+        actionBg: "rgba(19, 30, 49, 0.9)",
+        actionSelected: "rgba(45, 72, 118, 0.9)"
     };
 }
 
@@ -136,6 +161,11 @@ function applyTimeOfDayTheme() {
     root.style.setProperty("--cell-base", palette.cellBase);
     root.style.setProperty("--cell-hover", palette.cellHover);
     root.style.setProperty("--label-color", palette.labelColor);
+    root.style.setProperty("--command-panel-bg", palette.panelBg);
+    root.style.setProperty("--command-panel-border", palette.panelBorder);
+    root.style.setProperty("--command-panel-inner", palette.panelInner);
+    root.style.setProperty("--action-card-bg", palette.actionBg);
+    root.style.setProperty("--action-card-selected", palette.actionSelected);
 }
 
 function renderBoardRuler() {
