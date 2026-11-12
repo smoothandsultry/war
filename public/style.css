@@ -114,7 +114,7 @@ body {
     justify-items: center;
     align-items: center;
     box-sizing: border-box;
-    margin-left: -4px;
+    margin-left: 4px;
     overflow: visible;
 }
 
