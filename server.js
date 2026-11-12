@@ -7,6 +7,7 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const path = require('path');
 const crypto = require('crypto');
+const cron = require('node-cron');
 
 if (!global.crypto) {
     global.crypto = crypto;
@@ -30,7 +31,7 @@ const tankSchema = new mongoose.Schema({
     x: { type: Number, default: 0 },
     y: { type: Number, default: 0 },
     hearts: { type: Number, default: 3 },
-    ap: { type: Number, default: 10 },
+    ap: { type: Number, default: 0 },
     range: { type: Number, default: 2 },
     eliminated: { type: Boolean, default: false }
 });
@@ -307,6 +308,27 @@ app.use((err, req, res, next) => {
     }
     console.error("Server Error:", err);
     res.status(500).send(`<h1>Server Error</h1><p>${err.message}</p><a href='/'>Return Home</a>`);
+});
+
+cron.schedule('0 0 * * *', async () => {
+    try {
+        console.log("Running daily AP regeneration task (12:00 AM)...");
+        
+        await Tank.updateMany(
+            { eliminated: false },
+            { $inc: { ap: 1 } }
+        );
+
+        const activeTanks = await Tank.find({ eliminated: false });
+        io.emit("update-board", { tanks: activeTanks });
+        
+        console.log("Daily AP granted successfully to all active tanks.");
+    } catch (err) {
+        console.error("Error running daily AP cron job:", err);
+    }
+}, {
+    scheduled: true,
+    timezone: "America/New_Toronto"
 });
 
 const PORT = process.env.PORT || 3000;
