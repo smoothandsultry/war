@@ -78,8 +78,19 @@ function getTimeOfDayPalette() {
             panelBg: "rgba(255, 255, 255, 0.22)",
             panelBorder: "rgba(255, 255, 255, 0.28)",
             panelInner: "rgba(227, 234, 250, 0.7)",
+            panelText: "#182334",
+            panelMuted: "#586b8e",
+            userPillBg: "rgba(220, 229, 247, 0.84)",
+            userPillText: "#243750",
+            apBadgeBg: "rgba(214, 226, 255, 0.85)",
+            apBadgeText: "#2d3c59",
             actionBg: "rgba(230, 237, 249, 0.9)",
-            actionSelected: "rgba(202, 219, 255, 1)"
+            actionSelected: "rgba(202, 219, 255, 1)",
+            actionBorder: "rgba(117, 141, 201, 0.18)",
+            actionText: "#1c273a",
+            actionSubtext: "#475b7d",
+            actionCostBg: "rgba(30, 42, 63, 0.06)",
+            actionCostText: "#3d4a63"
         };
     }
 
@@ -95,8 +106,19 @@ function getTimeOfDayPalette() {
             panelBg: "rgba(255, 255, 255, 0.22)",
             panelBorder: "rgba(255, 255, 255, 0.28)",
             panelInner: "rgba(227, 234, 250, 0.7)",
+            panelText: "#1a2b3d",
+            panelMuted: "#5b728e",
+            userPillBg: "rgba(220, 229, 247, 0.82)",
+            userPillText: "#243750",
+            apBadgeBg: "rgba(214, 226, 255, 0.85)",
+            apBadgeText: "#2d3c59",
             actionBg: "rgba(230, 237, 249, 0.9)",
-            actionSelected: "rgba(202, 219, 255, 1)"
+            actionSelected: "rgba(202, 219, 255, 1)",
+            actionBorder: "rgba(117, 141, 201, 0.18)",
+            actionText: "#1c273a",
+            actionSubtext: "#475b7d",
+            actionCostBg: "rgba(30, 42, 63, 0.06)",
+            actionCostText: "#3d4a63"
         };
     }
 
@@ -112,8 +134,19 @@ function getTimeOfDayPalette() {
             panelBg: "rgba(245, 233, 214, 0.36)",
             panelBorder: "rgba(146, 111, 74, 0.2)",
             panelInner: "rgba(239, 224, 201, 0.72)",
+            panelText: "#31251b",
+            panelMuted: "#6a4d3d",
+            userPillBg: "rgba(230, 216, 188, 0.82)",
+            userPillText: "#332b26",
+            apBadgeBg: "rgba(226, 205, 167, 0.82)",
+            apBadgeText: "#342a26",
             actionBg: "rgba(240, 226, 204, 0.85)",
-            actionSelected: "rgba(222, 190, 129, 0.92)"
+            actionSelected: "rgba(222, 190, 129, 0.92)",
+            actionBorder: "rgba(146, 111, 74, 0.2)",
+            actionText: "#2f241d",
+            actionSubtext: "#5f4d3d",
+            actionCostBg: "rgba(69, 52, 35, 0.12)",
+            actionCostText: "#493d2d"
         };
     }
 
@@ -129,8 +162,19 @@ function getTimeOfDayPalette() {
             panelBg: "rgba(17, 24, 39, 0.72)",
             panelBorder: "rgba(121, 139, 178, 0.42)",
             panelInner: "rgba(29, 39, 59, 0.86)",
+            panelText: "#edf2ff",
+            panelMuted: "#c7d2ec",
+            userPillBg: "rgba(34, 45, 64, 0.74)",
+            userPillText: "#edf2ff",
+            apBadgeBg: "rgba(36, 46, 64, 0.8)",
+            apBadgeText: "#edf2ff",
             actionBg: "rgba(24, 35, 52, 0.9)",
-            actionSelected: "rgba(66, 89, 139, 0.9)"
+            actionSelected: "rgba(66, 89, 139, 0.9)",
+            actionBorder: "rgba(128, 153, 202, 0.35)",
+            actionText: "#edf2ff",
+            actionSubtext: "#c9d7ff",
+            actionCostBg: "rgba(10, 16, 28, 0.58)",
+            actionCostText: "#dfeaff"
         };
     }
 
@@ -145,8 +189,19 @@ function getTimeOfDayPalette() {
         panelBg: "rgba(13, 21, 37, 0.72)",
         panelBorder: "rgba(127, 147, 189, 0.36)",
         panelInner: "rgba(20, 30, 47, 0.88)",
+        panelText: "#edf2ff",
+        panelMuted: "#cfe0ff",
+        userPillBg: "rgba(25, 35, 52, 0.76)",
+        userPillText: "#edf2ff",
+        apBadgeBg: "rgba(23, 33, 49, 0.8)",
+        apBadgeText: "#edf2ff",
         actionBg: "rgba(19, 30, 49, 0.9)",
-        actionSelected: "rgba(45, 72, 118, 0.9)"
+        actionSelected: "rgba(45, 72, 118, 0.9)",
+        actionBorder: "rgba(127, 147, 189, 0.36)",
+        actionText: "#edf2ff",
+        actionSubtext: "#cfe0ff",
+        actionCostBg: "rgba(10, 16, 28, 0.58)",
+        actionCostText: "#dfeaff"
     };
 }
 
@@ -164,8 +219,19 @@ function applyTimeOfDayTheme() {
     root.style.setProperty("--command-panel-bg", palette.panelBg);
     root.style.setProperty("--command-panel-border", palette.panelBorder);
     root.style.setProperty("--command-panel-inner", palette.panelInner);
+    root.style.setProperty("--command-panel-text", palette.panelText);
+    root.style.setProperty("--command-panel-muted", palette.panelMuted);
+    root.style.setProperty("--user-pill-bg", palette.userPillBg);
+    root.style.setProperty("--user-pill-text", palette.userPillText);
+    root.style.setProperty("--ap-badge-bg", palette.apBadgeBg);
+    root.style.setProperty("--ap-badge-text", palette.apBadgeText);
     root.style.setProperty("--action-card-bg", palette.actionBg);
     root.style.setProperty("--action-card-selected", palette.actionSelected);
+    root.style.setProperty("--action-card-border", palette.actionBorder);
+    root.style.setProperty("--action-card-text", palette.actionText);
+    root.style.setProperty("--action-card-subtext", palette.actionSubtext);
+    root.style.setProperty("--action-cost-bg", palette.actionCostBg);
+    root.style.setProperty("--action-cost-text", palette.actionCostText);
 }
 
 function renderBoardRuler() {
