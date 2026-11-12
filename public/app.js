@@ -106,10 +106,10 @@ function getTimeOfDayPalette() {
         return {
             pageBgTop: "#1e2b52",
             pageBgBottom: "#0c132f",
-            boardBg: "rgba(25, 39, 72, 0.7)",
-            gridGlow: "rgba(163, 182, 255, 0.2)",
-            cellBase: "#313f68",
-            cellHover: "#45598a",
+            boardBg: "rgba(12, 20, 35, 0.9)",
+            gridGlow: "rgba(163, 182, 255, 0.18)",
+            cellBase: "#1a2942",
+            cellHover: "#223a5a",
             labelColor: "#d9e6ff"
         };
     }
@@ -117,10 +117,10 @@ function getTimeOfDayPalette() {
     return {
         pageBgTop: "#0a1021",
         pageBgBottom: "#050b16",
-        boardBg: "rgba(12, 20, 35, 0.8)",
-        gridGlow: "rgba(120, 154, 255, 0.22)",
-        cellBase: "#1b2945",
-        cellHover: "#273d63",
+        boardBg: "rgba(12, 20, 35, 0.9)",
+        gridGlow: "rgba(120, 154, 255, 0.18)",
+        cellBase: "#18263e",
+        cellHover: "#21385a",
         labelColor: "#dfeaff"
     };
 }

@@ -93,27 +93,32 @@ body {
     --board-grid-height: calc((20 * var(--board-cell-size)) + (19 * var(--board-gap)));
     --board-backdrop-width: calc(var(--board-grid-width) + (2 * var(--board-padding)));
     --board-backdrop-height: calc(var(--board-grid-height) + (2 * var(--board-padding)));
-    --board-ruler-offset: var(--board-padding);
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 32px auto;
+    grid-template-rows: auto auto;
     align-items: center;
+    justify-content: center;
+    column-gap: 8px;
+    row-gap: 6px;
     width: fit-content;
     margin: 0 auto;
 }
 
 .board-top-labels {
+    grid-column: 2;
+    grid-row: 1;
     display: grid;
     grid-template-columns: repeat(20, var(--board-cell-size));
     gap: var(--board-gap);
     width: var(--board-grid-width);
-    margin: 0 0 6px var(--board-ruler-offset);
-    padding: 0;
     justify-items: center;
     align-items: center;
     box-sizing: border-box;
 }
 
 .board-inner {
+    grid-column: 2;
+    grid-row: 2;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -135,13 +140,15 @@ body {
 }
 
 .board-side-labels {
+    grid-column: 1;
+    grid-row: 2;
     display: grid;
     grid-template-rows: repeat(20, var(--board-cell-size));
     gap: var(--board-gap);
     width: 32px;
     height: var(--board-grid-height);
-    margin: 0 8px 0 0;
-    padding-top: var(--board-ruler-offset);
+    margin: 0;
+    padding: 0;
     align-items: center;
     justify-items: center;
     box-sizing: border-box;
