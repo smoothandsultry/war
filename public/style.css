@@ -332,6 +332,7 @@ body {
 }
 
 @media (max-width: 760px) {
+    
     #game-container {
         padding-top: 10px;
     }
@@ -397,6 +398,12 @@ body {
         margin-top: 10px;
         padding-top: 8px;
         font-size: 0.72rem;
+    }
+
+    .board-shell {
+        --board-cell-size: clamp(8px, calc(5vw - 5.9px), 30px);
+        --board-gap: 2px;
+        --board-padding: 6px;
     }
 }
 
@@ -604,3 +611,4 @@ body {
         transform: scale(1.45);
     }
 }
+
